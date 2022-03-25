@@ -26,7 +26,7 @@ class PDO_fun{
 	private $_history_dbname = DB_HIS_NAME; //歷史資料庫名稱
     private $col_old_arr=[];
 	private $col_new_arr=[];
-
+    
 	public $hs_tb_name; 
 	public $hs_old_index_name='Tb_index'; 
 	public $hs_old_id=''; 
@@ -304,6 +304,35 @@ class PDO_fun{
 		$this->close($pdo_history);
     }
 
+
+    /* ---------------- 新增紀錄(自訂義) ----------------- */
+    function add_c_history($old_arr, $new_arr)
+    {
+		//-- 歷史紀錄 --
+		$this->h_snapshot=[
+			'old'=>$old_arr,
+			'new'=>$new_arr
+		];
+		
+		$pdo_history=$this->_pdo_conn($this->_history_dbname);
+
+        $admin_id=empty($this->hs_admin_id) ? $_COOKIE['admin_index']:$this->hs_admin_id;
+        $admin_name=empty($this->hs_admin_name) ? $_COOKIE['admin_name']:$this->hs_admin_name;
+		
+        $h_param=[
+            'admin_id'=>$admin_id,
+            'admin_name'=>$admin_name,
+            'h_location'=>$this->hs_h_location,
+            'h_action_type'=>$this->hs_h_action_type,
+            'h_title'=>$this->hs_h_title,
+            'h_snapshot'=> json_encode($this->h_snapshot),
+            'StartDate'=>date('Y-m-d H:i:s')
+        ];
+        $this->insert('sysHistory', $h_param, $pdo_history);
+		$this->close($pdo_history);
+    }
+
+
 	/* ---------------- 歷史紀錄(舊資料) ----------------- */
 	function old_data($db_name='website')
 	{
@@ -322,6 +351,18 @@ class PDO_fun{
 		return $data;
 	}
 
+
+
+    /* ---------------------- 資料表欄位陣列 -------------------------- */
+    function col_arr($tb_name, $data)
+    {
+      $arr=[];
+      $col=$this->select("SHOW FULL COLUMNS FROM ".$tb_name);
+      foreach ($col as $one) {
+            $arr[$one['Field']]=empty($data[$one['Field']]) ? '':$data[$one['Field']];
+      }
+      return $arr;
+    }
 
 
     
