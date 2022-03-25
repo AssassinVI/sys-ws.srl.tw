@@ -1,0 +1,22 @@
+@charset "UTF-8";
+/* CSS Document */
+
+#cLogo{
+background-color: #fff;
+width: 60px; 
+height: 60px; 
+text-align: center;
+line-height: 60px; 
+margin:0 auto;
+color:#18b896;
+font-size: 40px;
+font-weight: 500;
+}
+
+#cLogoWord{
+margin:0 auto;	
+line-height: 30px; 
+font-size: 15px;
+color: #fff;
+text-align: center;
+}

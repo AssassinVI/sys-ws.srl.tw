@@ -1,0 +1,22 @@
+<tr>
+    <td data-th="ID">{{index_num}}</td>
+    <td data-th="時間">{{set_time}}</td>
+    <td data-th="姓名">{{use_name}}</td>
+    <td data-th="電話">{{phone}}</td>
+    <td data-th="E-mail">{{use_mail}}</td>
+    <td data-th="其他">{{call_content}}</td>
+    <td data-th="來源">{{utm_source}}</td>
+    <td data-th="狀態">{{is_process}}</td>
+    <td data-th="管理" style="{{show_is_process}}">
+    <select name="is_process" id="is_process"  case_id="{{Tb_index}}">
+        <option value="">-- 請選擇 --</option>
+        <option value="0">未處理</option>
+        <option value="2">處理中</option>
+        <option value="1">已處理</option>
+    </select>
+    </td>
+    <td data-th="備註" class="remark_td">
+      <button type="button" class="btn btn-success btn-sm remark_btn" case_id="{{Tb_index}}">備註</button>
+      <span class="remark_txt">{{remark}}</span>
+    </td>
+</tr>

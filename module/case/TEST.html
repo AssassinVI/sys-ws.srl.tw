@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../../js/plugins/cropperjs/cropper.min.css">
+    <style>
+        .main{width: 1000px; margin: auto;}
+        .cropper_div{height: 600px; overflow: hidden;}
+        .show_img img{width: 100px;}
+        .cropper_img_div canvas{width: 100% !important; height: auto !important;}
+    </style>
+</head>
+<body>
+    <div class="main">
+        <div>
+            <input type="file" id="file">
+            <button type="button" id="upload_img">上傳圖檔</button>
+            <button type="button" id="upload_cropper_img">上傳剪裁圖檔</button>
+            <button type="button" id="ch_cropper_btn">確定剪裁</button>
+            <div class="show_img">
+               <a href="#"></a>
+            </div>
+        </div>
+        <div>
+            <p>
+               寬：<span class="img_w"></span><br>
+               高：<span class="img_h"></span>
+            </p>
+        </div>
+        <div class="cropper_div">
+            <img id="cropper_img" src="" alt="">
+        </div>
+        <div class="cropper_img_div">
+    
+        </div>
+    </div>
+    
+    
+    <script src="../../js/jquery-2.1.1.js"></script>
+    <script src="../../js/plugins/jquery-ui/jquery-ui.min.js"></script>
+    <script src="../../js/plugins/cropperjs/cropper.min.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            //-- 初始剪裁程式 --
+            const image = document.getElementById('cropper_img');
+            const cropper = new Cropper(image, {
+                aspectRatio: 1920 / 400,
+                viewMode:1,
+                dragMode:'move',
+                movable:false,
+                scalable:false,
+                zoomable:false,
+                cropBoxResizable:false,
+                autoCropArea:1,
+                minContainerHeight:500,
+                crop(event) {
+                    $('.img_w').html(Math.round(event.detail.width));
+                    $('.img_h').html(Math.round(event.detail.height));
+                    // console.log(event.detail.x);
+                    // console.log(event.detail.y);
+                    // console.log(event.detail.width);
+                    // console.log(event.detail.height);
+                    // console.log(event.detail.rotate);
+                    // console.log(event.detail.scaleX);
+                    // console.log(event.detail.scaleY);
+                },
+            });
+
+            $('.show_img a').click(function (e) { 
+                e.preventDefault();
+                cropper.replace($(this).find('img').attr('src'));
+            });
+
+            $('#file').change(function (e) { 
+                var _this=this;
+                var html_id='.show_img a';
+                var file = _this.files;
+                console.log(file);
+
+                if (file[0] != null) {
+                    var fileReader = new FileReader();
+                    fileReader.readAsDataURL(file[0]);
+                    fileReader.onload = function (event) {
+
+                        var file_name = _this.value.split('\\');
+                        var type = file_name[2].split('.');
+                        var re = /(\.jpg|\.webp|\.jpeg|\.svg|\.bmp|\.gif|\.png)$/i;
+
+                        //-- 驗證圖檔 --
+                        if (re.exec(file_name[2])) {
+                            if (html_id != '') {
+                                var result = this.result;
+                                var html_txt = '<img src="' + result + '" alt="">';
+                                $(html_id).html(html_txt);
+                            }
+                        } else {
+                            alert('請上傳圖檔');
+                            _this.value = '';
+                        }
+                    }
+                }
+                
+            });
+
+            //-- 上傳基本圖檔 --
+            $('#upload_img').click(function (e) { 
+                e.preventDefault();
+                let form_data = new FormData();
+
+                let file_DOM = document.getElementById('file');
+                form_data.append('c_img', file_DOM.files[0]);
+
+                $.ajax({
+                    type: "POST",
+                    url: "TEST.php",
+                    data: form_data,
+                    contentType: false,
+                    cache: false,
+                    processData:false,
+                    dataType: "json",
+                    success: function (data) {
+                        console.log(data);
+                    }
+                });
+            });
+
+            //-- 剪裁圖檔資料 --
+            var img_data='';
+            //-- 上傳剪裁圖檔 --
+            $('#upload_cropper_img').click(function (e) { 
+                e.preventDefault();
+                if(img_data!=''){
+                    const formData = new FormData();
+                    // Pass the image file name as the third parameter if necessary.
+                    formData.append('c_img', img_data/*, 'example.png' */);
+                    // Use `jQuery.ajax` method for example
+                    $.ajax('TEST.php', {
+                        method: 'POST',
+                        data: formData,
+                        processData: false,
+                        cache: false,
+                        contentType: false,
+                        dataType: "json",
+                        success(data) {
+                            console.log(data);
+                        },
+                        error() {
+                        console.log('Upload error');
+                        },
+                    });
+                }
+                else{
+                   alert('請確認剪裁圖檔');
+                }
+            });
+
+
+            //-- 確認剪裁圖檔 --
+            $('#ch_cropper_btn').click(function (e) { 
+                e.preventDefault();
+                cropper.getCroppedCanvas({width:1920}).toBlob((blob) => {
+                    img_data=blob;
+                }, "image/webp");
+                $('.cropper_img_div').html(cropper.getCroppedCanvas({width:1920}));
+            });
+
+        });
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	
+</head>
+<body style="height: 720px;">
+	<div class="container" >
+		<div class="row no-gutters wrapper">
+			<div class="col-md-12">
+			  <a class="list m-4">新增比較<i class="fa fa-bookmark"></i></a>
+			  <form class="m-4">
+			    <div class="form-group row">
+			      <label class="col-sm-4 col-form-label col-form-label-lg">名稱:</label>
+			      <div class="col-sm-8">
+			        <input type="text" class="form-control form-control-lg" id="tab_name" placeholder="">
+			      </div>
+			    </div>
+			    <!-- <div class="form-group row">
+			      <label class="col-sm-4 col-form-label col-form-label-lg">日期選擇方式:</label>
+			      <div class="col-sm-8 pt-3">
+			      	<div class="form-check form-check-inline">
+			      		<label class="form-check-label">
+			      		  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="d" checked>日
+			      		</label>
+			      	</div>
+			        <div class="form-check form-check-inline">
+			        	<label class="form-check-label">
+                         <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="m">月
+			            </label>
+			        </div>
+			        
+			      </div>
+			    </div> -->
+			    </form>
+			    <a>分析日期 <i class="fa fa-calendar"></i></a>
+			    <form class="m-4">
+			    <div class="form-group row">
+			      <label class="col-sm-4 col-form-label col-form-label-lg">開始日:</label>
+			      <div class="col-sm-8">
+			        <input type="text" readonly class="form-control form-control-lg" id="an_StartDate" placeholder="年-月-日">
+			      </div>
+			    </div>
+			    <div class="form-group row">
+			      <label class="col-sm-4 col-form-label col-form-label-lg">結束日:</label>
+			      <div class="col-sm-8">
+			        <input type="text" readonly class="form-control form-control-lg" id="an_EndDate" placeholder="年-月-日">
+			      </div>
+			    </div>
+			  </form>
+			  <a>
+			  	<label>
+			  	 <input id="compare_ch" type=checkbox >比較日期<i class="fa fa-calendar"></i>	
+			  	</label>
+			  </a>
+			  <form id="compare_date" class="m-4" style="display: none;">
+			    <div class="form-group row">
+			      <label class="col-sm-4 col-form-label col-form-label-lg">開始日:</label>
+			      <div class="col-sm-8">
+			        <input type="text" readonly class="form-control form-control-lg" id="com_StartDate" placeholder="年-月-日">
+			      </div>
+			    </div>
+			    <div class="form-group row">
+			      <label class="col-sm-4 col-form-label col-form-label-lg">結束日:</label>
+			      <div class="col-sm-8">
+			        <input type="text" readonly class="form-control form-control-lg" id="com_EndDate" placeholder="年-月-日">
+			      </div>
+			    </div>
+			  </form>
+			  <div class="text-center mt-4">
+			  <button id="sub_btn" type="button" class="btn btn-primary">確定</button>
+			  <button id="close_btn" type="button" class="btn btn-danger">取消</button>
+
+			  </div>		
+			</div>
+			
+		</div>
+	</div>
+
+
+	
+    
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous"></script>
+
+    <script
+      src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+      integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+	  crossorigin="anonymous"></script>
+	  
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+
+
+            $('#sub_btn').click(function (e) { 
+				
+				var err_txt = '';
+				err_txt = err_txt + check_input('#tab_name', '名稱\n');
+				err_txt = err_txt + check_input('#an_StartDate', '分析開始日\n');
+				err_txt = err_txt + check_input('#an_EndDate', '分析結束日\n');
+
+				if($('#compare_ch').prop('checked')==true){
+                    err_txt = err_txt + check_input('#com_StartDate', '比較開始日\n');
+					err_txt = err_txt + check_input('#com_EndDate', '比較結束日\n');
+				}
+
+				if (err_txt != '') {
+					alert("以下欄位為空值或是帶有特殊符號\n" + err_txt);
+				}
+				else {
+					var case_id=location.search;
+					    case_id= case_id.substr(1);
+					$.ajax({
+						type: "POST",
+						url: "tag_ajax.php",
+						data: {
+						  type: 'insert',
+						  case_id: case_id,
+                          tab_name:$('#tab_name').val(),
+						  an_StartDate: $('#an_StartDate').val(),
+						  an_EndDate: $('#an_EndDate').val(),
+						  com_StartDate: $('#com_StartDate').val(),
+						  com_EndDate: $('#com_EndDate').val(),
+						},
+						success: function (data) {
+						   alert('成功新增標籤');
+						   window.parent.location.reload();
+						}
+					});
+				}
+			});
+
+
+			$('#close_btn').click(function (e) { 
+				parent.jQuery.fancybox.getInstance().close();
+			});
+
+
+			$('#compare_ch').change(function(event) {
+			  if ($(this).prop('checked')==true) {
+			  	 $('#compare_date').css('display', 'block');
+			  }
+			  else{
+			  	 $('#compare_date').css('display', 'none');
+			  	 $('#compare_date input').val('');
+			  }
+			});
+
+
+
+		   //-- 分析日期 --
+		    var from= $('#an_StartDate' ).datepicker({
+		              dateFormat: "yy-mm-dd",
+		              yearRange: "-10:+10",
+		              changeMonth: true,
+		              changeYear: true,
+		              dayNamesMin :["日","一","二","三","四","五","六"],
+		              dayNames :["日","一","二","三","四","五","六"],
+		              monthNamesShort  :["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]
+		            })
+		            .on( "change", function() {
+		              to.datepicker( "option", "minDate", $(this).val());
+		            });
+
+		   var to= $('#an_EndDate').datepicker({
+		            dateFormat: "yy-mm-dd",
+		            yearRange: "-10:+10",
+		            changeMonth: true,
+		            changeYear: true,
+		            dayNamesMin :["日","一","二","三","四","五","六"],
+		            dayNames :["日","一","二","三","四","五","六"],
+		            monthNamesShort  :["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]
+		          })
+		          .on( "change", function() {
+		            from.datepicker( "option", "maxDate", $(this).val());
+		          });
+
+		    if ($('#an_StartDate' ).val()!='') {
+		      to.datepicker( "option", "minDate", $('#an_StartDate' ).val());
+		      $('#an_StartDate' ).val();
+		    }
+
+		    if ($('#an_EndDate' ).val()!='') {
+		      from.datepicker( "option", "maxDate", $('#an_EndDate' ).val());
+		      $('#an_EndDate' ).val();
+		    }
+
+
+
+
+		    //-- 比較日期 --
+		     var cp_from= $('#com_StartDate' ).datepicker({
+		               dateFormat: "yy-mm-dd",
+		               yearRange: "-10:+10",
+		               changeMonth: true,
+		               changeYear: true,
+		               dayNamesMin :["日","一","二","三","四","五","六"],
+		               dayNames :["日","一","二","三","四","五","六"],
+		               monthNamesShort  :["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]
+		             })
+		             .on( "change", function() {
+		               cp_to.datepicker( "option", "minDate", $(this).val());
+		             });
+
+		    var cp_to= $('#com_EndDate').datepicker({
+		             dateFormat: "yy-mm-dd",
+		             yearRange: "-10:+10",
+		             changeMonth: true,
+		             changeYear: true,
+		             dayNamesMin :["日","一","二","三","四","五","六"],
+		             dayNames :["日","一","二","三","四","五","六"],
+		             monthNamesShort  :["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]
+		           })
+		           .on( "change", function() {
+		             cp_from.datepicker( "option", "maxDate", $(this).val());
+		           });
+
+		     if ($('#com_StartDate' ).val()!='') {
+		       cp_to.datepicker( "option", "minDate", $('#com_StartDate' ).val());
+		       $('#com_StartDate' ).val();
+		     }
+
+		     if ($('#com_EndDate' ).val()!='') {
+		       cp_from.datepicker( "option", "maxDate", $('#com_EndDate' ).val());
+		       $('#com_EndDate' ).val();
+		     }
+		});
+
+
+		/*--- checkout 功能  ---*/
+			// =============================== 檢查input ====================================
+			function check_input(id, txt) {
+				if ($(id).length > 0) {
+					//-- 核取方塊、選取方塊 --
+					if ($(id).attr('type') == 'radio' || $(id).attr('type') == 'checkbox') {
+						if ($(id + ':checked').val() == undefined) {
+							$(id).css('borderColor', 'red');
+							return txt;
+						} else {
+							$(id).css('borderColor', 'rgba(0,0,0,0.1)');
+							return "";
+						}
+					} else {
+						if ($(id).val() == '' || $(id).val().search(/^(?:[^\~|\!|\#|\$|\%|\^|\&|\*|\(|\)|\=|\+|\{|\}|\[|\]|\"|\'|\<|\>]+)$/) == -1) {
+							$(id).css('borderColor', 'red');
+							return txt;
+						} else {
+							$(id).css('borderColor', 'rgba(0,0,0,0.1)');
+							return "";
+						}
+					}
+				} else {
+					return txt;
+				}
+			}
+	</script>
+</body>
+</html>

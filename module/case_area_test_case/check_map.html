@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+
+<head>
+    <meta charset="UTF-8">
+    <title>查詢地址座標</title>
+    <!-- googleMap工具 -->
+    <script type="text/javascript" src="../../js/jquery-2.1.1.js"></script>
+    <script type="text/javascript" src="../../js/jquery.tinyMap.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+    <style type="text/css">
+    body { position: relative; font-family: Microsoft JhengHei; }
+    
+    #map {margin: auto;width: 80%;height: 500px; background-color: #D3D4D4; }
+    #map-marker-02{float: left; width: 40%; height: 500px; }
+    #input{ float: left; padding: 10px; padding-top:50px; }
+    #addess{ width: 250px; font-size: 15px; padding: 5px; }
+    button{ color: #fff; font-size: 15px; margin-top: 5px; padding: 6px 15px; border: none; background: #009688; border-radius: 3px; }
+    #coordinate{ padding: 5px; border: 1px solid #fff; background: #e8e8e8; }
+
+    </style>
+    <script type="text/javascript">
+    $(document).ready(function() {
+
+      new Clipboard('.copy_btn');
+
+    $.fn.tinyMapConfigure({
+       'key': 'AIzaSyBmcZ9YTd68k4QYur5nowITqcI_kGZO5Ks'
+    });
+        
+        $('#map-marker-02').tinyMap({
+            'center': '桃園市',
+            'zoom': 14,
+            'marker': [{
+                'addr': '桃園市',
+                'event': {
+                    // created 事件於標記建立成功時執行。
+                    'created': function() {
+                        console.info('Event binding:')
+                        console.info('Marker create finished:');
+                        console.log(this);
+                    },
+                    // Click 事件
+                    'click': function(e) {
+                        alert('緯度: ' + e.latLng.lat() + ', 經度: ' + e.latLng.lng());
+                    },
+                }
+            }]
+        });
+
+
+        $("#search_map").click(function() {
+        	
+           $("#map-marker-02").tinyMap('panTo',$("#addess").val());
+           $("#map-marker-02").tinyMap('modify', {
+              'marker':[{
+              	  'addr': $("#addess").val(),
+              	  'event': {
+                    // created 事件於標記建立成功時執行。
+                    'created': function() {
+                        console.info('Event binding:')
+                        console.info('Marker create finished:');
+                        console.log(this);
+                        
+                    },
+                    // Click 事件
+                    'click': function(e) {
+                        alert('緯度: ' + e.latLng.lat() + ', 經度: ' + e.latLng.lng());
+                    },
+                }
+              }]
+           });
+           $("#map-marker-02").tinyMap('query', $("#addess").val(), function (addr) {
+           	    $("#coordinate").html(addr.geometry.location.lat()+","+addr.geometry.location.lng());
+           });
+        });
+
+
+        $('.copy_btn').click(function(event) {
+          alert('已複製座標!!');
+        });
+    });
+    </script>
+</head>
+
+<body>
+    <div id="map">
+      <div id="map-marker-02"></div>
+      <div id="input">
+      <label for="addess"> 輸入地址</label><br>
+      <input id="addess" type="text" placeholder="請輸入地址">
+      <div><button id="search_map" type="button" >收尋</button></div>
+      
+      <!--座標-->
+      <h3>您的座標:</h3>
+      <h4 id="coordinate"></h4>
+      <button type="button" data-clipboard-target="#coordinate" class="copy_btn">複製座標</button>
+      </div>
+    </div>
+</body>
+
+</html>
