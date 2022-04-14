@@ -624,13 +624,16 @@ class CaseAn extends Chartjs_class{
                 let completion_opt = _this.bar_options();
                 completion_opt.plugins.datalabels = false;
 
-                
                 completion_opt.scales ={
                     people_percentage:{
                         // id: 'people_percentage',
                         position: 'left',
                         suggestedMax: 100,
+                        grid: {
+                            color: '#ccc'
+                        },
                         ticks: {
+                            color: '#ccc',
                             min: 0,
                             stepSize: 2,
                             maxTicksLimit: 10,
@@ -646,6 +649,7 @@ class CaseAn extends Chartjs_class{
                             display: false,
                         },
                         ticks: {
+                            color: '#ccc',
                             min: 0,
                             stepSize: 2,
                             maxTicksLimit: 10,

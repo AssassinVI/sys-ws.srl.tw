@@ -1,5 +1,5 @@
 <?php include("../../core/page/header01.php");//載入頁面heaer01 ?>
-<link rel="stylesheet" href="../../css/an_style.css?19">
+<link rel="stylesheet" href="../../css/an_style.css?20">
 <style>
  #timeOnSite_div{display: none;}
 
@@ -80,14 +80,14 @@
 
  .user_mail_box .chart_item .flex_item:nth-child(1){
     color:#fff;
-    background:#1a79b5;
+    background:#00aabb;
     /* background: -moz-linear-gradient(45deg,  rgba(80,0,0,1) 0%, rgba(221,125,6,1) 100%); 
     background: -webkit-linear-gradient(45deg,  rgba(80,0,0,1) 0%,rgba(221,125,6,1) 100%); 
     background: linear-gradient(45deg,  rgba(80,0,0,1) 0%,rgba(221,125,6,1) 100%); */
  }
  .user_mail_box .chart_item .flex_item:nth-child(2){
     color:#fff;
-    background: #1a79b5;
+    background: #cf7200;
     /* background: -moz-linear-gradient(45deg,  rgba(13,80,124,1) 0%, rgba(6,194,213,1) 100%); 
     background: -webkit-linear-gradient(45deg,  rgba(13,80,124,1) 0%,rgba(6,194,213,1) 100%); 
     background: linear-gradient(45deg,  rgba(13,80,124,1) 0%,rgba(6,194,213,1) 100%); */
@@ -184,6 +184,51 @@
 
   .ch_tb tr th, .ch_tb tr td{font-size:16px;}
   .ch_tb .high_line{}
+
+  .dark_btn{border-radius:30px;}
+
+
+   /* ----------------------------- 暗黑模式 ------------------------------ */
+   .dark_model b, 
+   .dark_model strong,
+   .dark_model .an_list_div h2,
+   .dark_model #search_date_div p,
+   .dark_model .an_title{color: #fff;}
+   .dark_model .sel_time_btn{ color:#badfff;}
+   .dark_model .btn-primary.btn-outline{color:#5cf5d6;}
+
+   .dark_model.gray-bg{background-color: #202125;}
+   .dark_model .white-bg{background-color: #2e3349;}
+   .dark_model .border-bottom{border-bottom: 1px solid #2e3349 !important;}
+   .dark_model .tabs-container .tab-pane .panel-body{background-color: #2e3349;}
+   .dark_model .tabs-container .panel-body{border:none;}
+   .dark_model #search_date_div.search_c{background-color: #2e3349;}
+   .dark_model .chart_box .float-e-margins{ background-color: #2e3349;}
+   .dark_model .ibox-title{background-color: #2e3349; color: #fff;}
+   .dark_model .ibox-content{ background-color: #2e3349; border-color: #545a74;}
+   .dark_model .btn-default:hover, 
+   .dark_model .btn-default:focus, 
+   .dark_model .btn-default:active, 
+   .dark_model .btn-default.active{background-color: #6c6c6c !important;}
+   .dark_model .legend_div li i,
+   .dark_model .legend_div li b{color: #fff;}
+   .dark_model .st_ch_box .st_dt_box .s_sec{color: #fff;}
+   .dark_model .st_ch_box{box-shadow: 1px 1px 5px rgb(255 255 255 / 35%);}
+   .dark_model .txt_box h3{color: #fff;}
+   .dark_model .txt_box p{color: #fff;}
+   .dark_model .txt_box .dt span{color: #fff;}
+   .dark_model #an_mail_div th,
+   .dark_model #an_mail_div td,
+   .dark_model #ch_status,
+   .dark_model .label{color: #fff;}
+   .dark_model tbody tr:nth-child(odd){background-color: #232738;}
+   .dark_model tbody tr:nth-child(even){background-color: #1b1f30;}
+   .dark_model [name="is_process"]{background: #333;}
+   .dark_model .footer{background-color: #2e3349; border: 0;}
+   .dark_model .footer div{color:#fff;}
+
+
+
  
  @media (max-width:1400px) {
 
@@ -221,7 +266,7 @@
    .tabs-container.p-fixed{width: 100%;}
 
    .an_tool{display:none;}
-   .anchor_box{display:flex !important; margin: 10px 0 0 0;}
+   .anchor_box{display:inline-flex !important; margin: 10px 0 0 0;}
    .anchor_box button{margin-right: 5px;}
    .ibox-content{padding: 15px 15px 20px 15px;}
    .lineChart{height: 350px !important; }
@@ -345,6 +390,7 @@ if ($_GET) {
                       <button class="btn btn-outline btn-primary" anchor_id="#media_anchor" type="button"><i class="fa fa-laptop"></i> 媒體</button>
                       <button class="btn btn-outline btn-primary" anchor_id="#src_anchor" type="button"><i class="fa fa-search"></i> 來源</button>
                   </span>
+                  <button class="btn btn-outline btn-default dark_btn" type="button"><i class="fa fa-lightbulb-o"></i> 暗黑模式</button>
                 </p>
               </div>
             
@@ -523,51 +569,7 @@ if ($_GET) {
             </div>
           </div>
 
-          <!-- 互動比率 -->
-          <div class="BounceRate_box chart_box line_group">
-              <div class="line_ch_div">
-                <div class=" float-e-margins">
-                      <div class="ibox-title">
-                          <h5>互動比率 (百分比)
-                            <!-- <small>使用者與網頁互動(點擊功能鈕、瀏覽畫面一半以上)的比率</small> -->
-                          </h5>
-                      </div>
-                      <div class="ibox-content" style="overflow-x: auto;">
-                          <div id="BounceRate_div" class="line_chart_div">
-                            <canvas id="BounceRate_chart" class="lineChart"></canvas>
-                          </div>
-                          <div class="ph_time_txt">
-                            可往右拖曳顯示全部 <i class="fa fa-arrow-right"></i>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-
-              <div id="user_data_div" class="flex_box column jc-space-between chart_item ">
-                <div class="flex_item">
-                  <div id="max_BounceRates" class=" one_week_h5 top_num ">
-                      <i class="fa fa-pie-chart"></i>
-                      <h5 class="new-title"> <span class="title_txt">最大互動比率</span> </h5>
-                      <div id="max_BounceRate" class="ibox-content user_num">讀取中...</div>
-                  </div>
-                </div>
-                <div class="flex_item">
-                  <div id="min_BounceRates" class=" one_week_h5 top_num ">
-                      <i class="fa fa-pie-chart"></i>
-                      <h5 class="new-title"> <span class="title_txt">最小互動比率</span> </h5>
-                      <div id="min_BounceRate" class="ibox-content user_num">讀取中...</div>
-                  </div>
-                </div>
-                <div class="flex_item">
-                  <div id="avg_BounceRates" class="one_month_h5 top_num ">
-                      <i class="fa fa-pie-chart"></i> 
-                      <h5 class="new-title"><span class="title_txt">平均互動比率</span></h5>
-                      <div id="avg_BounceRate" class="ibox-content user_num">讀取中...</div>
-                  </div>
-                </div>
-              </div>
-          </div>
-          <!-- 互動比率 END -->
+          
 
           <div class="chart_box">
             <div class="bar_ch_div box_30">
@@ -686,7 +688,7 @@ if ($_GET) {
           </div>
           <!-- 每日來信來電 END -->
 
-
+  
           <div class="chart_box">
             
             <div class="media_box bar_ch_div box_30">
@@ -747,6 +749,52 @@ if ($_GET) {
               </div>
             </div>
           </div>
+
+          <!-- 互動比率 -->
+          <div class="BounceRate_box chart_box line_group">
+              <div class="line_ch_div">
+                <div class=" float-e-margins">
+                      <div class="ibox-title">
+                          <h5>互動比率 (百分比)
+                            <!-- <small>使用者與網頁互動(點擊功能鈕、瀏覽畫面一半以上)的比率</small> -->
+                          </h5>
+                      </div>
+                      <div class="ibox-content" style="overflow-x: auto;">
+                          <div id="BounceRate_div" class="line_chart_div">
+                            <canvas id="BounceRate_chart" class="lineChart"></canvas>
+                          </div>
+                          <div class="ph_time_txt">
+                            可往右拖曳顯示全部 <i class="fa fa-arrow-right"></i>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+              <div id="user_data_div" class="flex_box column jc-space-between chart_item ">
+                <div class="flex_item">
+                  <div id="max_BounceRates" class=" one_week_h5 top_num ">
+                      <i class="fa fa-pie-chart"></i>
+                      <h5 class="new-title"> <span class="title_txt">最大互動比率</span> </h5>
+                      <div id="max_BounceRate" class="ibox-content user_num">讀取中...</div>
+                  </div>
+                </div>
+                <div class="flex_item">
+                  <div id="min_BounceRates" class=" one_week_h5 top_num ">
+                      <i class="fa fa-pie-chart"></i>
+                      <h5 class="new-title"> <span class="title_txt">最小互動比率</span> </h5>
+                      <div id="min_BounceRate" class="ibox-content user_num">讀取中...</div>
+                  </div>
+                </div>
+                <div class="flex_item">
+                  <div id="avg_BounceRates" class="one_month_h5 top_num ">
+                      <i class="fa fa-pie-chart"></i> 
+                      <h5 class="new-title"><span class="title_txt">平均互動比率</span></h5>
+                      <div id="avg_BounceRate" class="ibox-content user_num">讀取中...</div>
+                  </div>
+                </div>
+              </div>
+          </div>
+          <!-- 互動比率 END -->
 
 
           
@@ -1034,8 +1082,8 @@ if ($_GET) {
 <script src="../../js/plugins/chartjs/3.6.0/chart.min.js"></script>
 <script src="../../js/plugins/chartjs/3.6.0/chartjs-plugin-annotation.min.js"></script>
 <script src="../../js/plugins/chartjs/3.6.0/chartjs-plugin-datalabels.min.js"></script>
-<script src="../../js/an_Class/Chart_class_v3.js?3"></script>
-<script src="../../js/an_Class/an_Class_v3.js?3"></script>
+<script src="../../js/an_Class/Chart_class_v3.js?10"></script>
+<script src="../../js/an_Class/an_Class_v3.js?10"></script>
 
 
 
@@ -1525,6 +1573,46 @@ if ($_GET) {
           scrollTop: $(`${_this.attr('anchor_id')}`).offset().top-100
       },1000);
     });
+
+
+  //-- 切換黑暗模式 --
+    $('.dark_btn').click(function (e) { 
+      let chart_arr=[
+          _user__chart, 
+          _mail_date__chart,
+          _years__chart,
+          _city__chart,
+          _interest__chart,
+          _interest_br__chart,
+          _media__chart,
+          _broswer__chart,
+          _BounceRate__chart
+          ];
+      if($('#page-wrapper').attr('class').indexOf('dark_model')==-1){
+        $('#page-wrapper').addClass('dark_model');
+        chart_arr.forEach(chart => {
+          chart.options.scales.y.grid.color='#ffffff30';
+          chart.options.scales.x.grid.color='#ffffff30';
+          chart.options.scales.y.ticks.color='#fff';
+          chart.options.scales.x.ticks.color='#fff';
+          chart.options.plugins.legend.labels.color='#fff';
+          chart.update();
+        });
+        
+      }
+      else{
+        $('#page-wrapper').removeClass('dark_model');
+        chart_arr.forEach(chart => {
+          chart.options.scales.y.grid.color='#E5E5E5';
+          chart.options.scales.x.grid.color='#E5E5E5';
+          chart.options.scales.y.ticks.color='#333';
+          chart.options.scales.x.ticks.color='#333';
+          chart.options.plugins.legend.labels.color='#333';
+          chart.update();
+        });
+      }
+    });
+
 
 
 

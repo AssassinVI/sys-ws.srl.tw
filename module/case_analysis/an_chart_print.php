@@ -59,7 +59,7 @@ $case=$pdo->select("SELECT aTitle FROM build_case WHERE Tb_index=:Tb_index", ['T
 
         .A4 table{width: 100%;}
         .A4 table tr th{font-size: 15px; font-weight: 400; text-align: left; padding: 10px; border-left: 1px solid #00b398; background-color: #00907a !important; color: #fff !important;}
-        .A4 table tr td{font-size: 13px;  font-weight: 400; padding: 10px; border-bottom: 1px solid #ccc; }
+        .A4 table tr td{font-size: 13px;  font-weight: 400; padding: 10px; border-bottom: 1px solid #ccc; word-break: break-all;}
 
         .A4>div{padding:10px 0;}
 
@@ -361,12 +361,12 @@ $case=$pdo->select("SELECT aTitle FROM build_case WHERE Tb_index=:Tb_index", ['T
                    <table cellspacing="0">
                        <thead>
                            <tr>
-                               <th>#</th>
-                               <th>時間</th>
-                               <th>姓名</th>
-                               <th>電話</th>
+                               <th width="50">#</th>
+                               <th width="90">時間</th>
+                               <th width="70">姓名</th>
+                               <th width="95">電話</th>
                                <th>E-mail</th>
-                               <th>其他</th>
+                               <th width="200">其他</th>
                                <th width="100">來源</th>
                                <th width="80">狀態</th>
                                <th width="100">備註</th>

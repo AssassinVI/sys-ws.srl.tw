@@ -52,7 +52,6 @@
 <!-- 自訂JS -->
 <script src="../../js/main.js?14"></script>
 
-</script>
 
 <script type="text/javascript">
 

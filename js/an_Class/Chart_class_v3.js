@@ -41,10 +41,9 @@
                 y: {
                     ticks: {
                         //stepSize: 2,
-                        suggestedMax: 10
+                        suggestedMax: 10,
                     },
-    
-                }
+                },
             },
             plugins: {
                 legend: {

@@ -419,8 +419,8 @@ img:after{
     /*-- 來信 --*/
     #an_mail_div thead{display: none;}
     #an_mail_div tbody tr{ display: block; padding: 15px 5px;}
-    #an_mail_div tbody tr td{display: block; padding-top: 1px;  padding-bottom: 1px;}
-    #an_mail_div tbody tr td::before{ content: attr(data-th) " : "; font-weight: bold; width: 5em; display: inline-block; color: #0e4e7b;}
+    #an_mail_div tbody tr td{display: block; padding-top: 1px;  padding-bottom: 1px; padding-left: 60px; min-height: 30px; position: relative;}
+    #an_mail_div tbody tr td::before{ content: attr(data-th) " : "; font-weight: bold; width: 5em; display: inline-block; color: #0e4e7b; position: absolute; left: 0;}
     #ch_status .label {
     width: 100%;
     display: block;

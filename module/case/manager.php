@@ -159,6 +159,7 @@ if ($_POST) {
 			             'version'=>$_POST['version'],
 			              'format'=>$_POST['format'],
 			            'line_txt'=>$_POST['line_txt'],
+	  					  'fb_sel'=>$_POST['fb_sel'],
 			              'fb_txt'=>$_POST['fb_txt'],
 			               'phone'=>$_POST['phone'],
 			          'build_adds'=>$_POST['build_adds'],
@@ -330,6 +331,7 @@ if ($_POST) {
 			             'version'=>$_POST['version'],
 			              'format'=>$_POST['format'],
 			            'line_txt'=>$_POST['line_txt'],
+						  'fb_sel'=>$_POST['fb_sel'],
 			              'fb_txt'=>$_POST['fb_txt'],
 			               'phone'=>$_POST['phone'],
 			          'build_adds'=>$_POST['build_adds'],
@@ -626,10 +628,11 @@ if ($_GET) {
 						<div class="form-group">
 							<label class="col-md-2 control-label text-success" >Facebook 功能選擇</label>
 							<div class="col-md-4">
-								<select id="fb_sel" class="form-control">
+								<select id="fb_sel" name="fb_sel" class="form-control">
 									<option value="share">分享臉書</option>
 									<option value="fans">臉書紛絲團</option>
 								</select>
+								<input type="hidden" name="fb_sel_val" value="<?php echo $row['fb_sel'];?>">
 							</div>
 							<label  class="col-md-2 control-label fb_fans" >臉書紛絲團</label>
 							<div class="col-md-4 fb_fans">
@@ -856,6 +859,12 @@ if ($_GET) {
        echo "$('#send_week [value=\"".$row['send_week']."\"]').prop('selected', true);";
 	 }
     ?>
+
+	//-- FB --
+	if($('[name="fb_sel_val"]').val()=='fans'){
+		$('[name="fb_sel"]').val($('[name="fb_sel_val"]').val());
+		$('.fb_fans').css('display', 'block');
+	}
 
 
     //-- 上下線 --

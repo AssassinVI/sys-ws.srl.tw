@@ -3,17 +3,21 @@
 	#sel_com{ padding: 5px; margin-right: 5px; }
 
 	#case_tb tr td:nth-child(3){font-size:1.5em;}
-	@media (max-width:420px){
+	.an_num{font-size: 17px; margin-left: 10px; padding-top: 14px; position: relative; width: 60px;}
+	.an_num.yet::before{content: '昨日：'; position: absolute; top: 0; left: 0; font-size: 12px; width: 59px;  color: #1ab394;}
+	.an_num.adv::before{content: '月平均：'; position: absolute; top: 0; left: 0; font-size: 12px; width: 59px; color: #b7b7b7;}
+	.an_td{display: flex; align-items: center;}
+	@media (max-width:500px){
+	  .wrapper-content{padding: 0;}
 	  tbody tr td::before{ width: 6em;}
 	  #case_tb tr{padding:10px; border-bottom:1px solid #e8e8e8;}
-	  #case_tb tr td{border:none; padding: 1px 5px;}
-	  #case_tb tr td:nth-child(3){font-size:15px}
+	  #case_tb tr td{border:none; padding: 5px; text-align: left; font-size: 15px;}
+	  #case_tb tr td:nth-child(3){ font-size: 15px;}
 	  #case_tb tr td:nth-child(7){ text-align: left;}
 	  .case_tb_div table thead{display: none;}
       .case_tb_div tbody tr{ display: block; padding: 10px 5px;}
       .case_tb_div tbody tr td{display: block; padding-top: 1px;  padding-bottom: 1px;}
       .case_tb_div tbody tr td::before{ content: attr(data-th) " : "; font-weight: bold; width: 5em; display: inline-block; color: #0e4e7b;}
-
 	}
 </style>
 <?php include("../../core/page/header02.php");//載入頁面heaer02?>
@@ -90,58 +94,17 @@ if ($_GET) {
 					<table class="table no-margin">
 						<thead>
 							<tr>
-								<th>#</th>
+								<th class="none_420">#</th>
 								<th class="none_420">ID</th>
 								<th>專案名稱</th>
-								<th class="none_420">排序</th>
+								<th>分析</th>
 								<th class="none_420">啟用/停用</th>
-								<th class="none_420">版本</th>
 								<th class="text-right">管理</th>
 
 							</tr>
 						</thead>
 						<tbody id="case_tb">
 
-						<?php $i=1; while ($row=$sql->fetch(PDO::FETCH_ASSOC)) {
-
-							if($_SESSION['admin_per']=='admin' || in_array($row['Tb_index'], $_SESSION['group_case'])){
-
-                              $OnLineOrNot=$row['OnLineOrNot']=='1' ? '<span class="label">啟用</span>' : '<span class="label label-danger">停用</span>';
-
-                              switch ($row['version']) {
-                              	case '1':
-                              	  $version='<span style="color:#2196f3; padding: 5px 10px; border: 1px solid; background: #e8f5ff;">正常版</span>';
-                              		break;
-                              	case '2':
-                              	  $version='<span style="color:#2196f3; padding: 5px 10px; border: 1px solid; background: #e8f5ff;">全屏滑動版</span>';
-                              		break;
-                              	case '0':
-                              	  $version='<span style="padding: 5px 10px; border: 1px solid; background: #e7e7e7;>簡易版</span>';
-                              		break;
-                                case '3':
-                              	  $version='<span style="color:#bc2cd5; padding: 5px 10px; border: 1px solid; background: #fbe3ff;">特殊版</span>';
-                              		break;
-                              }
-							?>
-							<tr>
-								<td data-th="#"><?php echo $i?></td>
-								<td class="none_420"><?php echo $row['Tb_index'];?></td>
-								<td data-th="專案名稱" ><?php echo $row['aTitle'];?></td>
-								<td class="none_420"><input type="number" class="sort_in" name="OrderBy" Tb_index="<?php echo $row['Tb_index'];?>" value="<?php echo $row['OrderBy'] ?>"></td>
-								<td class="none_420"><?php echo $OnLineOrNot;?></td>
-								<td class="none_420"><span style="color:#2196f3"><?php echo $version;?></span></td>
-
-								<td data-th="管理" class="text-right">
-                                
-                                <a class="btn btn-success btn-sm" href="analytics_new2.php?MT_id=<?php echo $_GET['MT_id']?>&Tb_index=<?php echo $row['Tb_index'];?>"><i class="fa fa-line-chart"></i> 進入分析</a>
-                                
-								</td>
-							</tr>
-						<?php 
-						   $i++; 
-					      }
-					   }
-					?>
 						</tbody>
 					</table>
 
@@ -157,8 +120,14 @@ if ($_GET) {
 
 </div><!-- /#page-content -->
 <?php  include("../../core/page/footer01.php");//載入頁面footer01.php?>
+<!-- Peity -->
+<script src="../../js/plugins/peity/jquery.peity.min.js"></script>
+
 <script type="text/javascript">
 	$(document).ready(function() {
+
+		//-- 抓全部 --
+		get_an_list();
 
 		 $(".iframe_box").fancybox({
 		 	'padding'               :'0',
@@ -190,55 +159,63 @@ if ($_GET) {
      
      //----------------- 選公司 ------------------
 		$('#sel_com').change(function(event) {
-			$.ajax({
-				url: 'admin_ajax.php',
-				type: 'POST',
-				dataType: 'json',
-				data: {
-					com_id: $(this).val(),
-					type:'company'
-			    },
-				success:function (data) {
-			     $('#case_tb').html('');
-	 			   var x=1;
-	 			   var txt='';
-	 		   	  $.each(data, function() {
-
-	 		   	  	var OnLineOrNot=this['OnLineOrNot']=='1' ? '<span class="label">啟用</span>' : '<span class="label label-danger">停用</span>';
-
-	 		   	  	switch(this['version']){
-	 		   	  		case '1':
-	 		   	  		 var version='<span style="color:#2196f3; padding: 5px 10px; border: 1px solid; background: #e8f5ff;">正常版</span>';
-	 		   	  		 break;
-	 		   	  		case '2':
-	 		   	  		 var version='<span style="color:#2196f3; padding: 5px 10px; border: 1px solid; background: #e8f5ff;">全屏滑動版</span>';
-	 		   	  		 break;
-	 		   	  		case '0':
-	 		   	  		 var version='<span style="padding: 5px 10px; border: 1px solid; background: #e7e7e7;>簡易版</span>';
-	 		   	  		 break;
-	 		   	  		case '3':
-	 		   	  		 var version='<span style="color:#bc2cd5; padding: 5px 10px; border: 1px solid; background: #fbe3ff;">特殊版</span>';
-                         break;
-	 		   	  	}
-	 				    txt+='<tr>';
-						txt+=' <td data-th="#" >'+x+'</td>';
-						txt+=' <td class="none_420">'+this['Tb_index']+'</td>';
-						txt+=' <td data-th="專案名稱" >'+this['aTitle']+'</td>';
-						txt+=' <td class="none_420"><input type="number" class="sort_in" name="OrderBy" Tb_index="'+this['Tb_index']+'" value="'+this['OrderBy']+'"></td>';
-						txt+=' <td class="none_420">'+OnLineOrNot+'</td>';
-						txt+=' <td class="none_420">'+version+'</td>';
-						txt+=' <td data-th="管理" class="text-right">';
-						txt+='    <a class="btn btn-success btn-sm" href="analytics_new2.php?MT_id=<?php echo $_GET['MT_id'];?>&Tb_index='+this['Tb_index']+'"><i class="fa fa-line-chart"></i> 進入分析</a>';
-						txt+=' </td>';
-						txt+='</tr>';
-				       x++;
-	 			   });
-
-	 			$('#case_tb').append(txt);
-				}
-			});
-			
+			get_an_list($(this).val());
 		});
 	});
+
+
+	function get_an_list (com_id='all') {
+		$.ajax({
+			url: 'admin_ajax.php',
+			type: 'POST',
+			dataType: 'json',
+			data: {
+				com_id: com_id,
+				type:'company'
+			},
+			success:function (data) {
+
+				console.log(data);
+				$('#case_tb').html('');
+				var x=1;
+				var txt='';
+				$.each(data, function() {
+
+				var OnLineOrNot=this['OnLineOrNot']=='1' ? '<span class="label">啟用</span>' : '<span class="label label-danger">停用</span>';
+
+					//-- 網址get --
+					let url_arr=url_get(); 
+
+					//-- 分析 --
+					let num=30;
+					let an_txt=this['an'].join(',');
+					let an_num=this['an'].length;
+					let an_yet_num=an_num==0 ? 0:this['an'][an_num-1];
+					let an_adv_num=an_num==0 ? 0: Math.round(this['an'].reduce((a,b)=>parseInt(a)+parseInt(b))/num);
+					
+					txt+=`<tr>
+							<td class="none_420" >${x}</td>
+							<td class="none_420">${this['Tb_index']}</td>
+							<td data-th="名稱" >${this['aTitle']}</td>
+							<td data-th="分析" class=" an_td"><span class="line">${an_txt}</span> <span class="an_num yet">${an_yet_num}人</span> <span class="an_num adv">${an_adv_num}人</span></td>
+							<td class="none_420">${OnLineOrNot}</td>
+							<td data-th="管理" class="text-right">
+							<a class="btn btn-success btn-sm" href="analytics_new2.php?MT_id=${url_arr['MT_id']}&Tb_index=${this['Tb_index']}"><i class="fa fa-line-chart"></i> 進入分析</a>
+							</td>
+							</tr>`;
+					x++;
+				});
+
+			$('#case_tb').append(txt);
+
+				$(".line").peity("line",{
+					fill: '#1ab394',
+					stroke:'#169c81',
+					width: 100,
+					height: 32
+				});
+			}
+		});
+	}
 </script>
 <?php  include("../../core/page/footer02.php");//載入頁面footer02.php?>
