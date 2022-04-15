@@ -187,11 +187,10 @@ if ($_GET) {
 					let url_arr=url_get(); 
 
 					//-- 分析 --
-					let num=30;
 					let an_txt=this['an'].join(',');
 					let an_num=this['an'].length;
 					let an_yet_num=an_num==0 ? 0:this['an'][an_num-1];
-					let an_adv_num=an_num==0 ? 0: Math.round(this['an'].reduce((a,b)=>parseInt(a)+parseInt(b))/num);
+					let an_adv_num=an_num==0 ? 0: Math.round(this['an'].reduce((a,b)=>parseInt(a)+parseInt(b))/an_num);
 					
 					txt+=`<tr>
 							<td class="none_420" >${x}</td>

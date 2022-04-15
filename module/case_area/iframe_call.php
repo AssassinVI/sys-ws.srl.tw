@@ -50,6 +50,7 @@ if($_POST){
        'btn_name'=>$_POST['btn_name'],
        're_name'=>implode(',', $_POST['re_name']),
        're_mail'=>implode(',', $_POST['re_mail']),
+       'send_type'=>$_POST['send_type'],
        'OnLineOrNot'=>$OnLineOrNot
     ];
     pdo_insert('call_us_tb', $param);
@@ -68,6 +69,7 @@ if($_POST){
        'btn_name'=>$_POST['btn_name'],
        're_name'=>implode(',', $_POST['re_name']),
        're_mail'=>implode(',', $_POST['re_mail']),
+       'send_type'=>$_POST['send_type'],
        'OnLineOrNot'=>$OnLineOrNot
     ];
     pdo_update('call_us_tb', $param, ['Tb_index'=>$Tb_index]);
@@ -135,7 +137,14 @@ if($_POST){
            }
           ?>
            
-
+            <div class="form-group">
+              <label class="col-sm-2 control-label" for="send_type">發信類型</label>
+              <div class="col-sm-10">
+                <label> <input type="radio" name="send_type" value="0" checked> 系統查看 </label>｜
+                <label> <input type="radio" name="send_type" value="1"> 直接顯示資料 </label>
+                <input type="hidden" name="ch_send_type" value="<?php echo $row['send_type'];?>">
+              </div>
+            </div>
             <div class="form-group">
               <label class="col-sm-2 control-label" for="OnLineOrNot">是否上線</label>
               <div class="col-sm-10">
@@ -156,6 +165,7 @@ if($_POST){
 <script type="text/javascript">
 	$(document).ready(function() {
         
+      $(`[name="send_type"][value="${$('[name="ch_send_type"]').val()}"]`).prop('checked',true);
 
       $('#save_btn').click(function(event) {
 

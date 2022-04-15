@@ -94,6 +94,13 @@
         $total_user=$pdo->select("SELECT SUM(one_user) as total FROM an_user WHERE case_id=:case_id GROUP BY case_id", 
                                  ['case_id'=>$_POST['case_id']], 'one');
 
+        //-- 總來信 --
+        $all_mail=$pdo->select("SELECT SUM(one_event) as total FROM an_event WHERE case_id=:case_id AND event_type='預約賞屋' GROUP BY case_id",
+                                ['case_id'=>$_POST['case_id']], 'one');
+        //-- 總來電 --
+        $all_phone=$pdo->select("SELECT SUM(one_event) as total FROM an_event WHERE case_id=:case_id AND event_type='撥打手機' GROUP BY case_id",
+                                ['case_id'=>$_POST['case_id']], 'one');
+
 
         $date_sql=empty($_POST['s_date']) ? "":"date BETWEEN :s_date AND :e_date AND";
         $sql_param=['s_date'=>$s_date, 'e_date'=>$e_date, 'case_id'=>$_POST['case_id']];
@@ -318,6 +325,8 @@
            'week_user'=>$week_user['total'],
            'month_user'=>$month_user['total'],
            'total_user'=>$total_user['total'],
+           'all_mail'=>$all_mail['total'],
+           'all_phone'=>$all_phone['total'],
         ];
         
 
@@ -342,6 +351,21 @@
     //-- 預約賞屋來信(備註) --
     elseif($_POST['type']=='ed_mail_remark'){
       $pdo->update('call_record_tb', ['remark'=>$_POST['remark']], ['Tb_index'=>$_POST['Tb_index']]);
+    }
+
+    //-- 月流量來源 切換 --
+    elseif($_POST['type']=='month_src_ch'){
+      $month_num=date('m', strtotime($_POST['month_num']));
+      $month_src=$pdo->select("SELECT src_type, IF(SUM(one_src)>=5, SUM(one_src), 0) as total
+                              FROM an_src
+                              WHERE case_id=:case_id AND src_type!='' AND date LIKE CONCAT(YEAR(NOW()), '-', :month_num, '%')
+                              GROUP BY src_type
+                              ORDER BY SUM(one_src) DESC
+                              LIMIT 0,5", 
+                            ['case_id'=>$_POST['case_id'], 'month_num'=> $month_num]);
+
+      $json['data']=$month_src;
+      echo json_encode($json);
     }
 
 

@@ -11,6 +11,9 @@
  .barChart{height:400px !important; }
  .mixChart{height:300px !important;}
  .pieChart.sm_chart{height:300px !important;}
+ .tooltip-inner{background-color: #eee; color:#333;  font-size:15px; letter-spacing:1px; font-weight: 300;}
+ .tooltip.right .tooltip-arrow{border-right-color: #eee;}
+ .tooltip.bottom .tooltip-arrow{border-bottom-color: #eee;}
 
  #search_date_btn{ border-radius: 30px;}
  #search_date_div input{border: none; outline: none; margin: 0 10px; box-shadow: 2px 2px 5px rgb(0 0 0 / 10%) inset; border-radius: 30px;}
@@ -45,7 +48,7 @@
  .chart_box .box_30{flex:1 1 33%; width: 33%;}
 
   .ibox-title{ height: auto; min-height: auto; padding: 20px;}
-  .ibox-title h5{ float: none; margin: 0; font-size: 18px; font-weight: 400;}
+  .ibox-title h5{ float: none; margin: 0; font-size: 18px; font-weight: 400; justify-content: space-between;}
   .ibox-title h5:before{content:none;}
  .chart_item .flex_item{border-radius: 20px; overflow: hidden; box-shadow: 0px 0px 20px rgb(0 0 0 / 10%);  
                         position: relative; height: 145px;  background-color: #fff; padding: 16px 20px; display: flex; align-items: center;}
@@ -124,6 +127,8 @@
     background: linear-gradient(0deg,  rgb(15 122 28) 0%,rgba(32,183,34,1) 100%);  */
  }
 
+ #month_src_ch{border-radius: 30px; padding: 0px 10px; border: 0; font-size: 16px; color: #333;}
+
  .media_item{margin: 15px 10px;}
  .media_item .flex_item{
     color:#fff;
@@ -170,8 +175,9 @@
   .legend_div li i{font-style: normal; font-size: 16px; font-weight: 300; color: #333;}
   .legend_div li b { color: #333; font-size: 16px;}
 
-  .ibox-title h5 span{font-weight:600;}
+  .ibox-title h5 span{font-weight:500; margin-right: 7px;}
   .ibox-title h5 i{margin-right:5px;}
+  .ibox-title h5 small{font-size: 13px; margin-top: 5px; font-weight: 300; letter-spacing: 1px;}
 
   .img_box{margin-top:15px; height: 240px; overflow: hidden; border-radius: 10px 10px 0px 0px;}
   .txt_box{ padding: 10px 15px; border: 1px solid #e5e5e5; border-radius: 0px 0px 10px 10px; border-top: 0;}
@@ -223,6 +229,8 @@
    .dark_model .label{color: #fff;}
    .dark_model tbody tr:nth-child(odd){background-color: #232738;}
    .dark_model tbody tr:nth-child(even){background-color: #1b1f30;}
+   .dark_model .txt_box{ border: 1px solid #444444;}
+   .dark_model .ibox-title h5 small{color: #dbdbdb;}
    .dark_model [name="is_process"]{background: #333;}
    .dark_model .footer{background-color: #2e3349; border: 0;}
    .dark_model .footer div{color:#fff;}
@@ -254,7 +262,7 @@
  }
 
  @media (max-width:768px) {
-   #ph_tool{bottom: 10px; right: 0px; left: 0; text-align: center;}
+   #ph_tool{display:none; bottom: 10px; right: 0px; left: 0; text-align: center;}
    #ph_tool ul{display: none; justify-content: space-around; margin: 0;}
    #ph_tool .tool_btn{width: 50px; height: 50px; font-size: 13px;}
    #ph_tabs_btn, #ph_all_time_btn{ box-shadow: 1px 1px 5px rgb(0 0 0 / 40%);}
@@ -287,7 +295,7 @@
 
    .BounceRate_box .chart_item .flex_item{    margin-bottom: 15px;  margin-right: 0px;}
 
-   .ibox-title h5 small{width: 75%; line-height:1.2;}
+   .ibox-title h5 small{ line-height: 1.3;}
 
    .txt_box .dt span{font-size: 13px;}
    .date_s_box{display: flex !important;}
@@ -371,13 +379,14 @@ if ($_GET) {
                  <h2><?php echo $row_name['aTitle'];?> Google分析 </h2>
                  <div class="an_tool">
                    <a class="print_btn btn btn-success" href="javascript:;"><i class="fa fa-print"></i> 列印報表</a>
-                   <a class="fancybox btn btn-success" data-fancybox-type="iframe" href="../case_url/catch_web.php?Tb_index=<?php echo $_GET['Tb_index'];?>"><i class="fa fa-globe"></i> 網址</a>
+                   <a class="fancybox btn btn-success" data-fancybox-type="iframe" href="../case_url/catch_web.php?Tb_index=<?php echo $_GET['Tb_index'];?>"><i class="fa fa-globe"></i> 分析網址</a>
                   </div>
               </div>
               
               <div id="search_date_div" class="search_c" >
                 <p>
                   <span>篩選時間：</span>
+                    <a class="sel_time_btn active" href="javascript:;" id="search_all_btn" data-toggle="tooltip" data-placement="bottom" data-original-title="總數統計">全部</a>
                     <a class="sel_time_btn" href="javascript:;" id="search_week_btn" >前一週</a>
                     <a class="sel_time_btn" href="javascript:;" id="search_week2_btn" >前兩週</a>
                     <a class="sel_time_btn" href="javascript:;" id="search_month_btn" >前一個月</a>
@@ -390,7 +399,7 @@ if ($_GET) {
                       <button class="btn btn-outline btn-primary" anchor_id="#media_anchor" type="button"><i class="fa fa-laptop"></i> 媒體</button>
                       <button class="btn btn-outline btn-primary" anchor_id="#src_anchor" type="button"><i class="fa fa-search"></i> 來源</button>
                   </span>
-                  <button class="btn btn-outline btn-default dark_btn" type="button"><i class="fa fa-lightbulb-o"></i> 暗黑模式</button>
+                  <button class="btn btn-outline btn-default dark_btn" type="button"><i class="fa fa-lightbulb-o"></i> 深色模式</button>
                 </p>
               </div>
             
@@ -626,11 +635,11 @@ if ($_GET) {
                       </div>
                       <ul id="visit_legend" class="legend_div"></ul>
                       <div class="re_visit chart_item">
-                          <div class="flex_item inline_item">
+                          <div class="flex_item inline_item" >
                             <div class=" one_week_h5 top_num ">
                                 <i class="fa fa-pie-chart"></i>
                                 <h5 class="new-title"> <span class="title_txt">回訪率</span> </h5>
-                                <div class="ibox-content user_num">讀取中...</div>
+                                <div class="ibox-content user_num" data-toggle="tooltip" data-placement="right" data-original-title="新訪客 / (新訪客+回訪客)">讀取中...</div>
                             </div>
                           </div>
                       </div>
@@ -755,9 +764,7 @@ if ($_GET) {
               <div class="line_ch_div">
                 <div class=" float-e-margins">
                       <div class="ibox-title">
-                          <h5>互動比率 (百分比)
-                            <!-- <small>使用者與網頁互動(點擊功能鈕、瀏覽畫面一半以上)的比率</small> -->
-                          </h5>
+                          <h5><span>互動比率 (百分比) </span><small>互動數 / 總曝光 (備註：互動數依據點擊功能鈕或瀏覽畫面一半以上)</small></h5>
                       </div>
                       <div class="ibox-content" style="overflow-x: auto;">
                           <div id="BounceRate_div" class="line_chart_div">
@@ -806,7 +813,7 @@ if ($_GET) {
             <div class="month_src_box pie_ch_div box_30">
               <div class="float-e-margins">
                   <div class="ibox-title">
-                      <h5><?php echo date('n');?>月流量來源 (人數)</h5>
+                      <h5><span><?php echo date('n');?>月流量來源 (人數)</span><input type="month" id="month_src_ch" max="<?php echo date('Y-m');?>"  value="<?php echo date('Y-m');?>"> </h5>
                   </div>
                   <div class="ibox-content">
                       <div id="month_src_chart_div">
@@ -820,7 +827,7 @@ if ($_GET) {
             <div class="src_box pie_ch_div box_30">
               <div class="float-e-margins">
                   <div class="ibox-title">
-                      <h5>總流量來源 (人數)</h5>
+                      <h5><span>流量來源 (人數)</span><small>默認總流量來源 此項目會隨著所選時間變換分析數字</small></h5>
                   </div>
                   <div class="ibox-content">
                       <div id="src_chart_div">
@@ -1122,6 +1129,8 @@ if ($_GET) {
 
 
 	$(document).ready(function() {
+
+     $('[data-toggle="tooltip"]').tooltip();
 
     //-- 網址get --
     let url_arr=url_get(); 
@@ -1504,6 +1513,51 @@ if ($_GET) {
 
 
 
+    /*================================== 全部 =========================================*/
+    $('#search_all_btn').click(function (e) { 
+      $('.sel_time_btn').removeClass('active');
+      $(this).addClass('active');
+      $('#an_StartDate').val('');
+      $('#an_EndDate').val('');
+      
+      get_an({
+        destroy:true
+      });
+    });
+
+
+    /*========================================== 月流量來源 切換 ==========================================*/
+    $('#month_src_ch').change(function (e) { 
+      
+      let month_num=$(this).val();
+
+      $.ajax({
+        type: "POST",
+        url: "an_chart_ajax.php",
+        data: {
+          type:'month_src_ch',
+          case_id: $('#Tb_index').val(),
+          month_num: month_num
+        },
+        dataType: "json",
+        success: function (data) {
+          //console.log(data);
+          _month_src__chart.destroy();
+          _month_src__chart= AnAll.src_chart({
+                  chart_id: 'month_src_chart', 
+                  user_data: data.data, 
+                  legend_id: 'month_src_legend'
+                });
+          let month_arr = month_num.split('-');
+          let month_txt= month_arr[1].slice(1);
+          $('.month_src_box h5 span').html(`${month_txt}月流量來源 (人數)`);
+        }
+      });
+      
+    });
+
+
+
     /*--------- 來信狀態修改 ----------- */
     $('#an_mail_div').on('change', '#is_process', function () {
       var _this=$(this);
@@ -1568,9 +1622,16 @@ if ($_GET) {
 
     $('.anchor_box button').click(function (e) { 
       e.preventDefault();
+      let offset_cu=0;
+      if($(window).width()>800){
+        offset_cu=120;
+      }
+      else{
+        offset_cu=180;
+      }
       let _this=$(this);
       $('html,body').animate({
-          scrollTop: $(`${_this.attr('anchor_id')}`).offset().top-100
+          scrollTop: $(`${_this.attr('anchor_id')}`).offset().top-offset_cu
       },1000);
     });
 
@@ -1671,7 +1732,7 @@ function get_an ({destroy=false}) {
               _media__chart.destroy();
               _broswer__chart.destroy();
               _event__chart.destroy();
-              _month_src__chart.destroy();
+              // _month_src__chart.destroy();
               _src__chart.destroy();
               _BounceRate__chart.destroy();
               _visit__chart.destroy();
@@ -1722,15 +1783,28 @@ function get_an ({destroy=false}) {
             max_mail_date: data.data.date[max_mail_index], 
             max_phone_date: data.data.date[max_phone_index]
           });
-          //-- 來信數 --
-          let total_user_mail=data.data.user_mail.reduce( (a,b)=>{ return a + b;});
-          //-- 來電數 --
-          let total_user_phone=data.data.user_phone.reduce( (a,b)=> { return a + b; });
-          //-- 聯絡比率 --
-          let adv_call=Math.round(((total_user_mail+total_user_phone)/data.data.total_user)*10000)/100;
-          $('#adv_mails .user_num').html(total_user_mail + '封');
-          $('#adv_phones .user_num').html(total_user_phone + '通');
-          $('#adv_calls .user_num').html(adv_call + '%');
+
+
+          if ($('#an_StartDate').val() != ''){
+            //-- 來信數 --
+            let total_user_mail=data.data.user_mail.reduce( (a,b)=>{ return a + b;});
+            //-- 來電數 --
+            let total_user_phone=data.data.user_phone.reduce( (a,b)=> { return a + b; });
+            //-- 聯絡比率 --
+            let adv_call=Math.round(((total_user_mail+total_user_phone)/data.data.total_user)*10000)/100;
+            $('#adv_mails .user_num').html(total_user_mail + '封');
+            $('#adv_phones .user_num').html(total_user_phone + '通');
+            $('#adv_calls .user_num').html(adv_call + '%');
+          }
+          else{
+            let total_user_mail= parseInt(data.data.all_mail);
+            let total_user_phone=parseInt( data.data.all_phone);
+            let adv_call=Math.round(((total_user_mail+total_user_phone)/data.data.total_user)*10000)/100;
+            $('#adv_mails .user_num').html(total_user_mail + '封');
+            $('#adv_phones .user_num').html(total_user_phone + '通');
+            $('#adv_calls .user_num').html(adv_call + '%');
+          }
+          
 
           
 
@@ -1898,11 +1972,14 @@ function get_an ({destroy=false}) {
 
 
           //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 當月流量 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-          _month_src__chart= AnAll.src_chart({
-            chart_id: 'month_src_chart', 
-            user_data: data.data.month_src, 
-            legend_id: 'month_src_legend'
-          });
+          if(destroy==false){
+             _month_src__chart= AnAll.src_chart({
+              chart_id: 'month_src_chart', 
+              user_data: data.data.month_src, 
+              legend_id: 'month_src_legend'
+            });
+          }
+         
 
 
           //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 總流量 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
