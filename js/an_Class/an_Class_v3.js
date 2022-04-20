@@ -697,8 +697,9 @@ class CaseAn extends Chartjs_class{
                
             var tb_html=data;
             
+            var user_data_num = user_data.length;
             $.each(user_data, function (index, valueOfElement) {
-                let index_num = index + 1;
+                
                 let is_process = '';
                 switch (this.is_process) {
                     case '0':
@@ -714,7 +715,7 @@ class CaseAn extends Chartjs_class{
                 let call_content = this['call_content']!='' ? this['call_content'].replace(' ','<br>') : '';
                 var html=tb_html;
                 let is_process_style=show_is_process ? '':'display:none;';
-                html=html.replaceAll("{{index_num}}", index_num);
+                html = html.replaceAll("{{index_num}}", user_data_num);
                 html=html.replaceAll("{{set_time}}", this['set_time']);
                 html=html.replaceAll("{{use_name}}", this['use_name']);
                 html=html.replaceAll("{{phone}}", this['phone']);
@@ -726,6 +727,8 @@ class CaseAn extends Chartjs_class{
                 html = html.replaceAll("{{remark}}", this['remark']);
                 html=html.replaceAll("{{Tb_index}}", this['Tb_index']);
                 $(DIV_id).append(html);
+
+                user_data_num--;
             });
 
         });

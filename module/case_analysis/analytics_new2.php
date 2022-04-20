@@ -83,14 +83,14 @@
 
  .user_mail_box .chart_item .flex_item:nth-child(1){
     color:#fff;
-    background:#00aabb;
+    background:#cf7200;
     /* background: -moz-linear-gradient(45deg,  rgba(80,0,0,1) 0%, rgba(221,125,6,1) 100%); 
     background: -webkit-linear-gradient(45deg,  rgba(80,0,0,1) 0%,rgba(221,125,6,1) 100%); 
     background: linear-gradient(45deg,  rgba(80,0,0,1) 0%,rgba(221,125,6,1) 100%); */
  }
  .user_mail_box .chart_item .flex_item:nth-child(2){
     color:#fff;
-    background: #cf7200;
+    background: #00aabb;
     /* background: -moz-linear-gradient(45deg,  rgba(13,80,124,1) 0%, rgba(6,194,213,1) 100%); 
     background: -webkit-linear-gradient(45deg,  rgba(13,80,124,1) 0%,rgba(6,194,213,1) 100%); 
     background: linear-gradient(45deg,  rgba(13,80,124,1) 0%,rgba(6,194,213,1) 100%); */
@@ -234,6 +234,7 @@
    .dark_model [name="is_process"]{background: #333;}
    .dark_model .footer{background-color: #2e3349; border: 0;}
    .dark_model .footer div{color:#fff;}
+   .dark_model #search_date_div input{color: #333;}
 
 
 
@@ -1089,8 +1090,8 @@ if ($_GET) {
 <script src="../../js/plugins/chartjs/3.6.0/chart.min.js"></script>
 <script src="../../js/plugins/chartjs/3.6.0/chartjs-plugin-annotation.min.js"></script>
 <script src="../../js/plugins/chartjs/3.6.0/chartjs-plugin-datalabels.min.js"></script>
-<script src="../../js/an_Class/Chart_class_v3.js?10"></script>
-<script src="../../js/an_Class/an_Class_v3.js?10"></script>
+<script src="../../js/an_Class/Chart_class_v3.js?13"></script>
+<script src="../../js/an_Class/an_Class_v3.js?13"></script>
 
 
 
@@ -1432,7 +1433,6 @@ if ($_GET) {
       var com_StartDate='';
       var com_EndDate='';
 
-      
       $('.sel_time_btn').removeClass('active');
       $(this).addClass('active');
       $('#an_StartDate').val(an_StartDate);
