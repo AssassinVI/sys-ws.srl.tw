@@ -11,9 +11,9 @@
  .barChart{height:400px !important; }
  .mixChart{height:300px !important;}
  .pieChart.sm_chart{height:300px !important;}
- .tooltip-inner{background-color: #eee; color:#333;  font-size:15px; letter-spacing:1px; font-weight: 300;}
+ /* .tooltip-inner{background-color: #eee; color:#333;  font-size:14px; letter-spacing:1px; font-weight: 300;}
  .tooltip.right .tooltip-arrow{border-right-color: #eee;}
- .tooltip.bottom .tooltip-arrow{border-bottom-color: #eee;}
+ .tooltip.bottom .tooltip-arrow{border-bottom-color: #eee;} */
 
  #search_date_btn{ border-radius: 30px;}
  #search_date_div input{border: none; outline: none; margin: 0 10px; box-shadow: 2px 2px 5px rgb(0 0 0 / 10%) inset; border-radius: 30px;}
@@ -177,7 +177,7 @@
 
   .ibox-title h5 span{font-weight:500; margin-right: 7px;}
   .ibox-title h5 i{margin-right:5px;}
-  .ibox-title h5 small{font-size: 13px; margin-top: 5px; font-weight: 300; letter-spacing: 1px;}
+  .ibox-title h5 small{font-size: 13px; margin-top: 5px; font-weight: 300; letter-spacing: 1px; color: #db3d33;}
 
   .img_box{margin-top:15px; height: 240px; overflow: hidden; border-radius: 10px 10px 0px 0px;}
   .txt_box{ padding: 10px 15px; border: 1px solid #e5e5e5; border-radius: 0px 0px 10px 10px; border-top: 0;}
@@ -356,9 +356,7 @@ if ($_GET) {
       </div>
     </div>
 
-   <?php 
-     if ($_SESSION['admin_per']=='admin' || $_SESSION['admin_per']=='group2020040610522078' || $_COOKIE['is_an_all']=='1') {
-   ?>
+  
 
    
    <div class="col-lg-12 ">
@@ -380,7 +378,7 @@ if ($_GET) {
                  <h2><?php echo $row_name['aTitle'];?> Google分析 </h2>
                  <div class="an_tool">
                    <a class="print_btn btn btn-success" href="javascript:;"><i class="fa fa-print"></i> 列印報表</a>
-                   <a class="fancybox btn btn-success" data-fancybox-type="iframe" href="../case_url/catch_web.php?Tb_index=<?php echo $_GET['Tb_index'];?>"><i class="fa fa-globe"></i> 分析網址</a>
+                   <a class="fancybox btn btn-success admin_show" data-fancybox-type="iframe" href="../case_url/catch_web.php?Tb_index=<?php echo $_GET['Tb_index'];?>"><i class="fa fa-globe"></i> 分析網址</a>
                   </div>
               </div>
               
@@ -462,24 +460,7 @@ if ($_GET) {
    </div>
    </div>
 
-<?php }else{ ?>
 
-
- <div  class="col-lg-12">
-  <div id="search_date_div">
-    <p>
-      <span>篩選時間：</span><input type="text" id="an_StartDate" readonly> ~ <input type="text" id="an_EndDate" readonly> <button id="search_date_btn" class="btn btn-success" type="button">查詢</button>
-      <span class="anchor_box">
-          <button class="btn btn-outline btn-primary" type="button"><i class="fa fa-users"></i> 使用者</button>
-          <button class="btn btn-outline btn-primary" type="button"><i class="fa fa-laptop"></i> 媒體</button>
-          <button class="btn btn-outline btn-primary" type="button"><i class="fa fa-search"></i> 來源</button>
-      </span>
-   </p>
-  </div>
- </div>
-
-
-<?php }?>
     
     <div id="top_div" class="col-lg-12" >
 
@@ -635,12 +616,12 @@ if ($_GET) {
                         <canvas id="visit_chart" class="pieChart sm_chart"></canvas>
                       </div>
                       <ul id="visit_legend" class="legend_div"></ul>
-                      <div class="re_visit chart_item">
+                      <div class="re_visit chart_item" data-toggle="tooltip" data-placement="bottom" data-original-title="新訪客 / (新訪客+回訪客)">
                           <div class="flex_item inline_item" >
                             <div class=" one_week_h5 top_num ">
                                 <i class="fa fa-pie-chart"></i>
                                 <h5 class="new-title"> <span class="title_txt">回訪率</span> </h5>
-                                <div class="ibox-content user_num" data-toggle="tooltip" data-placement="right" data-original-title="新訪客 / (新訪客+回訪客)">讀取中...</div>
+                                <div class="ibox-content user_num" >讀取中...</div>
                             </div>
                           </div>
                       </div>
@@ -687,11 +668,11 @@ if ($_GET) {
                       <div id="adv_phone" class="ibox-content user_num">讀取中...</div>
                   </div>
                 </div>
-                <div class="flex_item">
+                <div class="flex_item" data-toggle="tooltip" data-placement="bottom" data-original-title="(來信數+來電數)/總來人">
                   <div id="adv_calls" class=" all_user_h5 top_num ">
                       <i class="fa fa-pie-chart"></i> 
                       <h5 class="new-title"><span class="title_txt">聯絡比率</span></h5>
-                      <div id="adv_call" class="ibox-content user_num">讀取中...</div>
+                      <div id="adv_call" class="ibox-content user_num" >讀取中...</div>
                   </div>
                 </div>
               </div>
@@ -1090,8 +1071,8 @@ if ($_GET) {
 <script src="../../js/plugins/chartjs/3.6.0/chart.min.js"></script>
 <script src="../../js/plugins/chartjs/3.6.0/chartjs-plugin-annotation.min.js"></script>
 <script src="../../js/plugins/chartjs/3.6.0/chartjs-plugin-datalabels.min.js"></script>
-<script src="../../js/an_Class/Chart_class_v3.js?13"></script>
-<script src="../../js/an_Class/an_Class_v3.js?13"></script>
+<script src="../../js/an_Class/Chart_class_v3.js?18"></script>
+<script src="../../js/an_Class/an_Class_v3.js?18"></script>
 
 
 

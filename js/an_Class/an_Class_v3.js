@@ -535,14 +535,17 @@ class CaseAn extends Chartjs_class{
                 let avg_time=user_data.find(function (item) {
                     return item.src_type== src.src_type;
                 });
-                let high_line = src.total >= avg_max_src ? '':'d-none';
-                src_time_tr += `<div class="${high_line} st_ch_box">
+                if (avg_time!=undefined){
+                    let high_line = src.total >= avg_max_src ? '' : 'd-none';
+                    src_time_tr += `<div class="${high_line} st_ch_box">
                                     <h3>${ch_src[0]}</h3>
                                     <div class="st_dt_box">
                                     <p class="s_sec">平均使用時間(秒)：${Math.round(parseInt(avg_time.avg_time))}秒</p>
                                     <p class="s_num">來源數：${ch_src[1]}人</p>
                                     </div>
                                 </div>`;
+                }
+                
             }
         });
 
