@@ -344,7 +344,6 @@ if ($_GET) {
                                     <div class="sk-rect5"></div>
                                 </div>
   </div>
-  
 
 </div>
 
@@ -355,10 +354,6 @@ if ($_GET) {
          <input name="admin_per" type="hidden" value="<?php echo $_SESSION['admin_per'];?>">
       </div>
     </div>
-
-  
-
-   
    <div class="col-lg-12 ">
    <div class="tab_fixed_h">
      <!-- 手機佔位 -->
@@ -657,21 +652,21 @@ if ($_GET) {
                 <div class="flex_item">
                   <div id="adv_mails" class=" one_week_h5 top_num ">
                       <i class="fa fa-envelope"></i>
-                      <h5 class="new-title"> <span class="title_txt">來信數</span> </h5>
+                      <h5 class="new-title"> <span class="title_txt">總來信數</span> </h5>
                       <div id="adv_mail" class="ibox-content user_num">讀取中...</div>
                   </div>
                 </div>
                 <div class="flex_item">
                   <div id="adv_phones" class=" one_month_h5 top_num ">
                       <i class="fa fa-phone"></i>
-                      <h5 class="new-title"> <span class="title_txt">來電數</span></h5>
+                      <h5 class="new-title"> <span class="title_txt">總來電數</span></h5>
                       <div id="adv_phone" class="ibox-content user_num">讀取中...</div>
                   </div>
                 </div>
                 <div class="flex_item" data-toggle="tooltip" data-placement="bottom" data-original-title="(來信數+來電數)/總來人">
                   <div id="adv_calls" class=" all_user_h5 top_num ">
                       <i class="fa fa-pie-chart"></i> 
-                      <h5 class="new-title"><span class="title_txt">聯絡比率</span></h5>
+                      <h5 class="new-title"><span class="title_txt">總聯絡比率</span></h5>
                       <div id="adv_call" class="ibox-content user_num" >讀取中...</div>
                   </div>
                 </div>
@@ -763,21 +758,21 @@ if ($_GET) {
                 <div class="flex_item">
                   <div id="max_BounceRates" class=" one_week_h5 top_num ">
                       <i class="fa fa-pie-chart"></i>
-                      <h5 class="new-title"> <span class="title_txt">最大互動比率</span> </h5>
+                      <h5 class="new-title"> <span class="title_txt">區間最大互動比率</span> </h5>
                       <div id="max_BounceRate" class="ibox-content user_num">讀取中...</div>
                   </div>
                 </div>
                 <div class="flex_item">
                   <div id="min_BounceRates" class=" one_week_h5 top_num ">
                       <i class="fa fa-pie-chart"></i>
-                      <h5 class="new-title"> <span class="title_txt">最小互動比率</span> </h5>
+                      <h5 class="new-title"> <span class="title_txt">區間最小互動比率</span> </h5>
                       <div id="min_BounceRate" class="ibox-content user_num">讀取中...</div>
                   </div>
                 </div>
                 <div class="flex_item">
                   <div id="avg_BounceRates" class="one_month_h5 top_num ">
                       <i class="fa fa-pie-chart"></i> 
-                      <h5 class="new-title"><span class="title_txt">平均互動比率</span></h5>
+                      <h5 class="new-title"><span class="title_txt">區間平均互動比率</span></h5>
                       <div id="avg_BounceRate" class="ibox-content user_num">讀取中...</div>
                   </div>
                 </div>
@@ -809,7 +804,7 @@ if ($_GET) {
             <div class="src_box pie_ch_div box_30">
               <div class="float-e-margins">
                   <div class="ibox-title">
-                      <h5><span>流量來源 (人數)</span><small>默認總流量來源 此項目會隨著所選時間變換分析數字</small></h5>
+                      <h5><span>總流量來源 (人數)</span><small>默認總流量來源 此項目會隨著所選時間變換分析數字</small></h5>
                   </div>
                   <div class="ibox-content">
                       <div id="src_chart_div">
@@ -1733,12 +1728,17 @@ function get_an ({destroy=false}) {
 
           if ($('#an_StartDate').val() != '') {
               $('#month_src_div').addClass('date_none');
-              $('.src_box h2').html('區間流量來源');
+              $('.src_box h5 span').html('區間流量來源 (人數)');
 
               $('#week_users .user_num').html(`${fm_Thousands(data.data.user[max_user_index])}人`);
               $('#month_users .user_num').html(`${fm_Thousands(data.data.user[min_user_index])}人`);
               $('#week_users .title_txt').html(` 最大<span class="ph_none">瀏覽</span>人數 <small>${data.data.date[max_user_index]}</small>`);
               $('#month_users .title_txt').html(` 最小<span class="ph_none">瀏覽</span>人數 <small>${data.data.date[min_user_index]}</small>`);
+          }
+          else{
+              $('.src_box h5 span').html('總流量來源 (人數)');
+              $('#week_users .title_txt').html(` 一周瀏覽人數`);
+              $('#month_users .title_txt').html(` 一個月瀏覽人數`);
           }
 
           //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 每日使用人數 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -1776,6 +1776,9 @@ function get_an ({destroy=false}) {
             $('#adv_mails .user_num').html(total_user_mail + '封');
             $('#adv_phones .user_num').html(total_user_phone + '通');
             $('#adv_calls .user_num').html(adv_call + '%');
+            $('#adv_phones .title_txt').html(`區間來信數`);
+            $('#adv_mails .title_txt').html(`區間來電數`);
+            $('#adv_calls .title_txt').html(`區間聯絡比率`);
           }
           else{
             let total_user_mail= parseInt(data.data.all_mail);
@@ -1784,6 +1787,9 @@ function get_an ({destroy=false}) {
             $('#adv_mails .user_num').html(total_user_mail + '封');
             $('#adv_phones .user_num').html(total_user_phone + '通');
             $('#adv_calls .user_num').html(adv_call + '%');
+            $('#adv_phones .title_txt').html(`總來信數`);
+            $('#adv_mails .title_txt').html(`總來電數`);
+            $('#adv_calls .title_txt').html(`總聯絡比率`);
           }
           
 

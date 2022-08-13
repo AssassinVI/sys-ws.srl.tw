@@ -17,18 +17,23 @@ include("../../core/page/header02.php");//載入頁面heaer02
         //-- 舊資料 --
         $new_pdo->old_data();
 
+        $StartDate=empty($_POST['StartDate']) ? '0000-00-00':$_POST['StartDate'];
+        $EndDate=empty($_POST['EndDate']) ? '0000-00-00':$_POST['EndDate'];
+
        $param=array("Tb_index"=>'admin'.date('YmdHis').rand(0,99), 
                    "admin_per"=>$_POST['admin_per'], 
                     "admin_id"=>$_POST['admin_id'], 
                    "admin_pwd"=>aes_encrypt_7($aes_key, $_POST['admin_pwd']), 
                   "build_time"=>date('Y-m-d H:i:s'), 
                         "name"=>$_POST['name'], 
-                       "phone"=>$_POST['phone'], 
-                        "adds"=>$_POST['adds'],
-                        "email"=>$_POST['email'],
+                      //  "phone"=>$_POST['phone'], 
+                      //   "adds"=>$_POST['adds'],
+                      //   "email"=>$_POST['email'],
                        "is_use"=>$_POST['is_use']=='1' ? '1':'0' ,
-                    "is_an_all"=>$_POST['is_an_all']=='1' ? '1':'0' 
-      );
+                    "is_an_all"=>$_POST['is_an_all']=='1' ? '1':'0',
+                    "StartDate"=>$StartDate,
+                    "EndDate"=>$EndDate,
+                  );
 
        pdo_insert('sysAdmin', $param);//新增方法
 
@@ -55,11 +60,13 @@ include("../../core/page/header02.php");//載入頁面heaer02
                     "admin_id"=>$_POST['admin_id'], 
                   "build_time"=>date('Y-m-d H:i:s'), 
                         "name"=>$_POST['name'], 
-                       "phone"=>$_POST['phone'], 
-                        "adds"=>$_POST['adds'],
-                        "email"=>$_POST['email'], 
+                      //  "phone"=>$_POST['phone'], 
+                      //   "adds"=>$_POST['adds'],
+                      //   "email"=>$_POST['email'], 
                        "is_use"=>$_POST['is_use']=='1' ? '1':'0',
-                    "is_an_all"=>$_POST['is_an_all']=='1' ? '1':'0' 
+                    "is_an_all"=>$_POST['is_an_all']=='1' ? '1':'0',
+                    "StartDate"=>$_POST['StartDate'],
+                    "EndDate"=>$_POST['EndDate'], 
                   );
         $where=array('Tb_index'=>$_POST['Tb_index']);
 
@@ -112,6 +119,9 @@ include("../../core/page/header02.php");//載入頁面heaer02
     $row=$sql->fetch(PDO::FETCH_ASSOC);
     $zipcode=substr($row['adds'], 0,3);
     $adds=explode(',', $row['adds']);
+
+    $StartDate=empty($row['StartDate']) ? date("Y-m-d") : $row['StartDate'];
+    $EndDate=empty($row['EndDate']) ? '' : $row['EndDate'];
   }
 ?>
 
@@ -155,34 +165,29 @@ include("../../core/page/header02.php");//載入頁面heaer02
                  <div class="col-md-2">
                   <input type="text" class="form-control" id="name" value="<?php echo $row['name'];?>">
                  </div>
-                <label class="col-md-1 control-label" for="phone">電話</label>
-                 <div class="col-md-2">
-                  <input type="text" class="form-control" id="phone" value="<?php echo $row['phone'];?>">
-                 </div>
+
                 <label class="col-md-1 control-label" for="is_use">狀態</label>
                  <div class="col-md-2">
                   <input type="checkbox" class="checkbox" id="is_use" 
                   <?php echo $check=!isset($row['is_use']) || $row['is_use']==1 ? 'checked' : ''; ?> value="1">
                  </div>
-            </div>
-            <div class="form-group">
-              <label class="col-md-1 control-label" for="email">信箱</label>
-                 <div class="col-md-5">
-                  <input type="text" class="form-control" id="email" value="<?php echo $row['email'];?>">
-                 </div>
-              <label class="col-md-1 control-label" for="is_an_all">分析進階功能</label>
+
+                 <label class="col-md-1 control-label" for="is_an_all">分析進階功能</label>
                  <div class="col-md-2">
                   <input type="checkbox" class="checkbox" id="is_an_all" 
                   <?php echo $check=$row['is_an_all']==1 ? 'checked' : ''; ?> value="1">
                  </div>
             </div>
+
+            <div class="form-group">
+              <label class="col-md-1 control-label" >帳號啟用時間</label>
+                 <div class="col-md-10">
+                   <input type="text" name="StartDate" class="datepicker_range from" value="<?php echo $StartDate;?>"> ～ <input type="text" name="EndDate" class="datepicker_range to" value="<?php echo $EndDate;?>">
+                 </div>
+            </div>
             
             <div class="form-group">
-               <label class="col-md-1 control-label" for="adds">地址</label>
-                 <div class="col-md-6">
-                  <div class="twzipcode"></div>
-                  <input type="text"  id="adds" class="adds" value="<?php echo $adds[1];?>">
-                 </div>
+               <label class="col-md-1 control-label" ></label>
                <div class="col-md-2">
               <?php if (empty($_GET['Tb_index'])) { ?>
                     <button type="button" id="admin_btn" class="btn btn-info btn-block btn-raised">儲存</button>
@@ -215,11 +220,13 @@ include("../../core/page/header02.php");//載入頁面heaer02
                     admin_id: $("#admin_id").val(),
                    admin_pwd: $("#admin_pwd").val(),
                         name: $("#name").val(),
-                       phone: $("#phone").val(),
-                       email: $("#email").val(),
-                        adds: $('[name="zipcode"]').val()+$('[name="county"]').val()+$('[name="district"]').val()+","+$("#adds").val(),
+                      //  phone: $("#phone").val(),
+                      //  email: $("#email").val(),
+                      //   adds: $('[name="zipcode"]').val()+$('[name="county"]').val()+$('[name="district"]').val()+","+$("#adds").val(),
                       is_use: $(":checked#is_use").val(),
-                      is_an_all: $(':checked#is_an_all').val()
+                      is_an_all: $(':checked#is_an_all').val(),
+                      StartDate: $('[name="StartDate"]').val(),
+                      EndDate: $('[name="EndDate"]').val(),
                };
       ajax_in('manager.php', data, '新增管理者', 'admin.php');
     });
@@ -232,11 +239,13 @@ include("../../core/page/header02.php");//載入頁面heaer02
                     admin_id: $("#admin_id").val(),
                    admin_pwd: $("#admin_pwd").val(),
                         name: $("#name").val(),
-                       phone: $("#phone").val(),
-                       email: $("#email").val(),
-                        adds: $('[name="zipcode"]').val()+$('[name="county"]').val()+$('[name="district"]').val()+","+$("#adds").val(),
+                      //  phone: $("#phone").val(),
+                      //  email: $("#email").val(),
+                      //   adds: $('[name="zipcode"]').val()+$('[name="county"]').val()+$('[name="district"]').val()+","+$("#adds").val(),
                       is_use: $(":checked#is_use").val(),
-                      is_an_all: $(':checked#is_an_all').val()
+                      is_an_all: $(':checked#is_an_all').val(),
+                      StartDate: $('[name="StartDate"]').val(),
+                      EndDate: $('[name="EndDate"]').val(),
                };
 
       ajax_in('manager.php', data, '更新管理者', 'admin.php');

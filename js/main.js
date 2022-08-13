@@ -164,9 +164,12 @@ function DateFormat(date) {
     var dateTime = new Date(date);
     var year = dateTime.getFullYear(),
         month = dateTime.getMonth() + 1,
-        date = dateTime.getDate();
+        g_date = dateTime.getDate();
 
-    var timeFormat = year + '-' + month + '-' + date;
+    month = month < 10 ? '0' + month : month;
+    g_date = g_date < 10 ? '0' + g_date : g_date;
+
+    var timeFormat = year + '-' + month + '-' + g_date;
 
     return timeFormat;
 }

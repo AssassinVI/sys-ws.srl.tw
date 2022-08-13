@@ -16,6 +16,19 @@
       		pdo_update('change_css', ['css'=>$_POST['css']], ['Tb_index'=>$_POST['Tb_index']]);
       	}
  	}
+
+	//----------- 自訂CSS ------------
+
+	elseif($_POST['type']=='js'){
+
+		$row=pdo_select("SELECT Tb_index FROM change_js WHERE Tb_index=:Tb_index", ['Tb_index'=>$_POST['Tb_index']]);
+		if(empty($row['Tb_index'])){
+		 pdo_insert('change_js', ['Tb_index'=>$_POST['Tb_index'], 'js'=>$_POST['js']]);
+		}
+		else{
+			pdo_update('change_js', ['js'=>$_POST['js']], ['Tb_index'=>$_POST['Tb_index']]);
+		}
+   }
     
     //----------- 更改顏色 ------------
 

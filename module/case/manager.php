@@ -174,6 +174,7 @@ if ($_POST) {
 			           'StartDate'=>date('Y-m-d'),
 					     'EndDate'=>$_POST['EndDate'],
 					 'OnLineOrNot'=>$_POST['OnLineOrNot'],
+					 	  'on_gtm'=>$_POST['on_gtm'],
 					   'send_mail'=>$_POST['send_mail'],
                        'send_week'=>$_POST['send_week'],
 			                'aPic'=>$aPic,
@@ -345,6 +346,7 @@ if ($_POST) {
 			             'KeyWord'=>$_POST['KeyWord'],
 					  	 'EndDate'=>$_POST['EndDate'],
 					 'OnLineOrNot'=>$_POST['OnLineOrNot'],
+						  'on_gtm'=>$_POST['on_gtm'],
 					   'send_mail'=>$_POST['send_mail'],
                        'send_week'=>$_POST['send_week'],
 			           'ad_making'=>$ad_making
@@ -797,6 +799,19 @@ if ($_GET) {
 
 
 						<div class="form-group">
+							<label class="col-md-2 control-label" for="on_gtm">啟用預設GTM</label>
+							<div class="col-md-10">
+								
+								<label><input type="radio" name="on_gtm" value="1"> 使用</label>｜
+								<label><input type="radio" name="on_gtm" value="0"> 取消</label>
+
+								<input type="hidden" id="on_gtm_input" value="<?php echo $num=!isset($row['on_gtm']) ? 1 : $row['on_gtm']; ?>">
+								
+							</div>
+						</div>
+
+
+						<div class="form-group">
 							<label class="col-md-2 control-label" for="OnLineOrNot">是否上線</label>
 							<div class="col-md-10">
 								
@@ -870,6 +885,10 @@ if ($_GET) {
     //-- 上下線 --
 	let OnLineOrNot_input=$('#OnLineOrNot_input').val();
 	$(`[name="OnLineOrNot"][value="${OnLineOrNot_input}"]`).prop('checked', true);
+
+	//-- 啟用GTM --
+	let on_gtm_input=$('#on_gtm_input').val();
+	$(`[name="on_gtm"][value="${on_gtm_input}"]`).prop('checked', true);
 
 
           $("#submit_btn").click(function(event) {

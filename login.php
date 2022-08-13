@@ -44,12 +44,31 @@ if ($_POST) {
       if(!empty($_POST['admin_id']) && !empty($_POST['admin_pwd'])){
          
          $where = array("admin_id" => $_POST['admin_id'], "admin_pwd" => aes_encrypt_7($aes_key, $_POST['admin_pwd']));
-         $admin = pdo_select("SELECT Tb_index, admin_per, name, is_an_all FROM sysAdmin WHERE admin_id=:admin_id AND admin_pwd=:admin_pwd AND is_use='1'", $where);
+         $admin = pdo_select("SELECT Tb_index, admin_per, name, is_an_all, StartDate, EndDate FROM sysAdmin WHERE admin_id=:admin_id AND admin_pwd=:admin_pwd AND is_use='1'", $where);
 
        if (empty($admin)) {
            location_up('login.php', '帳號或密碼錯誤!!');
            exit();
        } 
+
+        if($admin['StartDate']=='0000-00-00' && $admin['EndDate']=='0000-00-00'){
+          $is_use_date=true;
+        }
+        elseif(strtotime($admin['StartDate'])<= strtotime('today') && $admin['EndDate']=='0000-00-00'){
+          $is_use_date=true;
+        }
+        elseif(strtotime($admin['StartDate'])<= strtotime('today') && strtotime($admin['EndDate']) >= strtotime('today')){
+          $is_use_date=true;
+        }
+        else{
+          $is_use_date=false;
+        }
+
+       if(!$is_use_date){
+          location_up('login.php', '非權限使用期間，請與管理員聯絡!!');
+          exit();
+       }
+
     }
     //-- 記住我 --
     elseif(!empty($_COOKIE['Tb_index'])){

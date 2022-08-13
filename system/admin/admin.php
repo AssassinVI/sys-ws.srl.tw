@@ -57,18 +57,19 @@
 					<table class="table no-margin">
 						<thead>
 							<tr>
-								<th>#</th>
-								<th>名稱</th>
-								<th>帳號</th>
-								<th>信箱</th>
-								<th>狀態</th>
+								<th width="50">#</th>
+								<th width="150">名稱</th>
+								<th width="150">帳號</th>
+								<th width="250">信箱</th>
+								<th width="50">狀態</th>
+								<th>使用期間</th>
 								<th class="text-right">管理</th>
 
 							</tr>
 						</thead>
 						<tbody>
 						<?php 
-                         $sql=$pdo->prepare("SELECT Tb_index, admin_id, name, email, is_use FROM sysAdmin WHERE admin_per=:admin_per");
+                         $sql=$pdo->prepare("SELECT * FROM sysAdmin WHERE admin_per=:admin_per");
                          $sql->execute(array("admin_per"=>'admin'));
 						 $i=1; while ($row=$sql->fetch(PDO::FETCH_ASSOC)) {?>
 							<tr>
@@ -78,7 +79,9 @@
                                 <td><?php echo $row['email']?></td>
 								<td><input class="checkbox switch switch-primary" disabled id="settings7" type="checkbox" 
 								 <?php echo $check=$row['is_use']=='1' ? 'checked' : '';?> /></td>
-								
+								<td>
+								  <?php echo $row['StartDate'].' ~ '.$row['EndDate'];?>
+								</td>
 
 								<td class="text-right">
 
@@ -119,19 +122,20 @@
 					<table class="table no-margin">
 						<thead>
 							<tr>
-								<th>#</th>
-								<th>名稱</th>
-								<th>帳號</th>
-								<th>信箱</th>
-								<th>分析進階功能</th>
-								<th>狀態</th>
+								<th width="50">#</th>
+								<th width="150">名稱</th>
+								<th width="150">帳號</th>
+								<th width="250">信箱</th>
+								<th width="100">分析進階功能</th>
+								<th width="50">狀態</th>
+								<th>使用期間</th>
 								<th class="text-right">管理</th>
 
 							</tr>
 						</thead>
 						<tbody>
 						<?php 
-                         $sql=$pdo->prepare("SELECT Tb_index, admin_id, name, email, is_use, is_an_all FROM sysAdmin WHERE admin_per=:admin_per");
+                         $sql=$pdo->prepare("SELECT * FROM sysAdmin WHERE admin_per=:admin_per");
                          $sql->execute(array("admin_per"=>$row_group['Tb_index']));
 						 $i=1; while ($row=$sql->fetch(PDO::FETCH_ASSOC)) {?>
 							<tr>
@@ -143,7 +147,24 @@
 								 <?php echo $check=$row['is_an_all']=='1' ? 'checked' : '';?> /></td>
 								<td><input class="checkbox switch switch-primary" disabled id="settings7" type="checkbox" 
 								 <?php echo $check=$row['is_use']=='1' ? 'checked' : '';?> /></td>
-								
+								<td>
+								  <?php 
+								    if($row['StartDate']=='0000-00-00' && $row['EndDate']=='0000-00-00'){
+										$Date_txt='';
+									}
+									elseif(strtotime($row['StartDate'])<= strtotime('today') && $row['EndDate']=='0000-00-00'){
+										$Date_txt='';
+									}
+									elseif(strtotime($row['StartDate'])<= strtotime('today') && strtotime($row['EndDate']) >= strtotime('today')){
+										$Date_txt='';
+									}
+									else{
+
+										$Date_txt='<span class="text-danger">非權限使用期間</span>';
+									}
+								    echo $row['StartDate'].' ~ '.$row['EndDate'].'｜'.$Date_txt;
+								  ?>
+								</td>
 
 								<td class="text-right">
 

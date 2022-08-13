@@ -1,68 +1,68 @@
 <?php include("../../core/page/header01.php");//載入頁面heaer01?>
 <style type="text/css">
-.wrapper-content {
-    padding: 20px 10px 0px;
-}
+    .wrapper-content {
+        padding: 20px 10px 0px;
+    }
 
-#sel_fun {
-    padding: 5px 15px;
-    margin-right: 5px;
-    font-size: 15px;
-}
+    #sel_fun {
+        padding: 5px 15px;
+        margin-right: 5px;
+        font-size: 15px;
+    }
 
-.ibox-tools a {
-    color: #fff;
-}
+    .ibox-tools a {
+        color: #fff;
+    }
 
-.loading {
-    display: block;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 31px;
-    margin: auto;
-}
+    .loading {
+        display: block;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 31px;
+        margin: auto;
+    }
 
-.md-skin .ibox-content {
-    position: relative;
-}
+    .md-skin .ibox-content {
+        position: relative;
+    }
 
-.sk-spinner-three-bounce div {
-    background-color: #838383;
-}
+    .sk-spinner-three-bounce div {
+        background-color: #838383;
+    }
 
-.iframe_div {
-    position: relative;
-    width: 100%;
-    height: 820px;
-    overflow-x: auto;
-}
+    .iframe_div {
+        position: relative;
+        width: 100%;
+        height: 820px;
+        overflow-x: auto;
+    }
 
-.iframe_div iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 1920px;
-    height: 975px;
-    transform: scale(0.63);
-    transform-origin: 0 0;
-}
+    .iframe_div iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1920px;
+        height: 975px;
+        transform: scale(0.63);
+        transform-origin: 0 0;
+    }
 
-.ibox-title h3 {
-    display: inline-block;
-    margin-right: 10px;
-}
+    .ibox-title h3 {
+        display: inline-block;
+        margin-right: 10px;
+    }
 
-.ibox-content {
-    height: 66vh;
-    overflow: auto;
-}
+    .ibox-content {
+        height: 66vh;
+        overflow: auto;
+    }
 
-#sort_btn {
-    display: none;
-}
+    #sort_btn {
+        display: none;
+    }
 </style>
 <?php include("../../core/page/header02.php");//載入頁面heaer02?>
 <?php 
@@ -120,10 +120,14 @@ if ($_GET) {
 
                         <a href="iframe_color.php?Tb_index=<?php echo $_GET['Tb_index']?>"
                             class="iframe_box btn btn-success">更改顏色</a>
-                        <a href="iframe_css.php?Tb_index=<?php echo $_GET['Tb_index']?>"
-                            class="iframe_box btn btn-success">自訂CSS</a>
                         <button id="sort_btn" type="button" class="btn btn-success"><i
                                 class="fa fa-sort-amount-desc"></i> 更新排序</button>
+                        <br>
+                        <a href="iframe_css.php?Tb_index=<?php echo $_GET['Tb_index']?>"
+                            class="iframe_box btn btn-success">自訂CSS</a>
+                        <a href="iframe_js.php?Tb_index=<?php echo $_GET['Tb_index']?>"
+                            class="iframe_box btn btn-success">自訂JS</a>
+                        
                         <!-- 功能區塊排序 -->
                         <input type="hidden" id="fun_sort">
 
@@ -172,7 +176,7 @@ if ($_GET) {
         echo "<h2>無畫面...</h2>";
         }
         else{
-          echo '<iframe src="https://ws.srl.tw/test/'.$case_num.'/" id="case_iframe" ></iframe>';
+          echo '<iframe src="https://ws.srl.tw/test/'.$case_num.'/" id="case_iframe" name="case_iframe" ></iframe>';
         }
       ?>
                 </div>
@@ -205,7 +209,7 @@ $(document).ready(function() {
 
                 $('body').append(
                     '<div id="put_website_div" style="position: fixed; top: 0; left: 0; z-index: 100; width: 100%; height: 100%; background-color: rgb(255 255 255 / 0.8); display: flex;  justify-content: center; align-items: center;"><p>匯出中...</p></div>'
-                    );
+                );
             },
             complete: function() {
 
@@ -397,18 +401,14 @@ function funbox_all() {
 
 
                 var txt = '<li class="' + this['btn_type'] + '" id="' + this['Tb_index'] + '">' +
-                    '<i class="fa ' + this['btn_icon'] + '"></i> ' + this['box_name'] +
-                    an_name + OnLineOrNot
-
-                    +
+                    '<i class="fa ' + this['btn_icon'] + '"></i> ' + this['box_name'] +an_name + OnLineOrNot +
                     '<a href="#" title="' + this['box_name'] +
                     '" class="pull-right btn btn-xs btn-danger del_funbox">刪除</a>' +
                     '<a style="margin-right:5px;" href="' + this['aUrl'] +
                     '?MT_id=<?php echo $_GET['MT_id'];?>&Tb_index=' + this['case_id'] + '&fun_id=' +
                     this['fun_id'] + '&rel_id=' + this['Tb_index'] +
                     '" class="pull-right btn btn-xs btn-primary iframe_box">編輯</a>' +
-                    '<a style="margin-right:5px;" href="javascript:;" onclick="move_iframe(\'' +
-                    this['fun_id'] + '\')" class="pull-right btn btn-xs btn-white">檢視</a>' +
+                    
                     '</li>';
                 $('.sortable-list').append(txt);
 
@@ -450,10 +450,10 @@ function anchor_name(fun_id) {
 //----- iframe 滑到指定位置 ------
 function move_iframe(id) {
 
-    var if_body = $('#case_iframe').contents();
-
+    var if_body = $(window.frames['case_iframe'].document);
+    console.log(if_body.find('#' + id).offset());
     if_body.find('html,body').animate({
-        scrollTop: if_body.find('#' + id).offset().top - if_body.find('#top_navbar').height()
+        scrollTop: if_body.find('#' + id).offset().top 
     }, 1000);
 
 }

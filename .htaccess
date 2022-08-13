@@ -14,8 +14,8 @@ RewriteRule ^(.*)$ https://sys-ws.srl.tw/$1 [R,L]
 order deny,allow
 allow from 220.134.254.165
 allow from 220.134.28.159
-allow from 101.12.56.122
-allow from 27.53.56.14
+allow from 220.129.170.247
+allow from 27.53.233.91
 deny from all
 </Limit>
 

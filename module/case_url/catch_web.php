@@ -486,7 +486,7 @@ $(document).ready(function() {
 
 //-------------------------------- 編輯到達網址 ----------------------------------
 $('#save_url_div').on('click', '.edit_url_btn', function(){
-  let edit_url=prompt('請貼上新的網址');
+  let edit_url=prompt('請貼上新的網址', $(this).html());
   
   if(edit_url==''){
 	 alert('請輸入新網址');

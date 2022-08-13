@@ -605,7 +605,7 @@ function test_audio($audio)
 //----------------------------------- 驗證其他檔案 ---------------------------------
 function test_file($file)
 {
-  if (preg_match('/^.+\.(jpg|png|gif|doc|docx|xls|xlsx|ppt|pptx|pdf|mp4)$/i', $file)){
+  if (preg_match('/^.+\.(jpg|png|gif|webp|doc|docx|xls|xlsx|ppt|pptx|pdf|mp4)$/i', $file)){
     return true;
   }else{
     return false;

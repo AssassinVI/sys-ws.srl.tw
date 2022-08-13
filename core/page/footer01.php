@@ -50,7 +50,7 @@
 <script  src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.0/TweenMax.min.js"></script>
 
 <!-- 自訂JS -->
-<script src="../../js/main.js?14"></script>
+<script src="../../js/main.js?15"></script>
 
 
 <script type="text/javascript">
@@ -89,6 +89,48 @@ $(document).ready(function() {
         dayNames :["日","一","二","三","四","五","六"],
         monthNamesShort  :["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]
     });
+  }
+
+
+  //-- 期間日期 --
+  if ($('.datepicker_range').length>0) {
+    
+    var from= $('.datepicker_range.from' ).datepicker({
+              dateFormat: "yy-mm-dd",
+              yearRange: "-10:+10",
+              changeMonth: true,
+              changeYear: true,
+              dayNamesMin :["日","一","二","三","四","五","六"],
+              dayNames :["日","一","二","三","四","五","六"],
+              monthNamesShort  :["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]
+            })
+            .on( "change", function() {
+              to.datepicker( "option", "minDate", $(this).val());
+            });
+
+   var to= $('.datepicker_range.to').datepicker({
+            dateFormat: "yy-mm-dd",
+            yearRange: "-10:+10",
+            changeMonth: true,
+            changeYear: true,
+            dayNamesMin :["日","一","二","三","四","五","六"],
+            dayNames :["日","一","二","三","四","五","六"],
+            monthNamesShort  :["一月","二月","三月","四月","五月","六月","七月","八月","九月","十月","十一月","十二月"]
+          })
+          .on( "change", function() {
+            from.datepicker( "option", "maxDate", $(this).val());
+          });
+
+    if ($('.datepicker_range.form' ).val()!='') {
+      to.datepicker( "option", "minDate", $('.datepicker_range.from' ).val());
+      $('.datepicker_range.from' ).val();
+    }
+
+    if ($('.datepicker_range.to' ).val()!='') {
+      from.datepicker( "option", "maxDate", $('.datepicker_range.to' ).val());
+      $('.datepicker_range.to' ).val();
+    }
+
   }
 
 
