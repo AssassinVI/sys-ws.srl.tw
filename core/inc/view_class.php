@@ -15,7 +15,7 @@ class view_class
     /*-- 更改參數 --*/
 	function replace($search ,$replace)
 	{
-		$this->view_html=str_replace($search, $replace, $this->view_html);
+		$this->view_html=preg_replace($search, $replace, $this->view_html);
 	}
 
     /*-- 輸出 --*/

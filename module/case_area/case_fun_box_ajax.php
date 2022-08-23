@@ -1,9 +1,13 @@
 <?php 
  require '../../core/inc/config.php';
  require '../../core/inc/function.php';
+ require '../../core/inc/pdo_fun_calss.php';
  require_once '../../core/inc/PHPZip.php';
 
  if ($_POST) {
+
+  $pdo_new= new PDO_fun();
+  //$pdo_job= new PDO_fun('job');
  	
  	//------- 新增功能區塊關聯 ------
  	if($_POST['type']=='insert'){
@@ -91,32 +95,19 @@
     echo $an_name['anchor_name'];
   }
 
-  //-- 匯出網站 --
-  elseif($_POST['type']=='put_website'){
+  // //-- 匯出網站(資料庫紀錄) --
+  // elseif($_POST['type']=='put_website'){
 
-    $web_url='website_tmp/'.$_POST['case_id'];
-    
-    // -- 清除舊暫存 --
-    if(file_exists($web_url)){
-      deleteDir($web_url);
-      mkdir($web_url);
-    }
-    else{
-      mkdir($web_url);
-    }
-    
-    // -- 複製CSS,JS,img --
-    //-- 外層共用 --
-    copy_dir(WS_PATH.'assets', $web_url.'/assets');
-    deleteDir($web_url.'/assets/php');
-    copy_dir(WS_PATH.'img', $web_url.'/img');
-    //-- 建案檔案 --
-    copy_dir(WS_PATH.'product_html/'.$_POST['case_id'], $web_url);
-    unlink($web_url.'/Default.php');
-    unlink($web_url.'/error_log');
-    
+  //   $job=$pdo_job->select("SELECT COUNT(*) as total FROM put_website WHERE case_id=:case_id", ['case_id'=>$_POST['case_id']], 'one');
+  //   if((int)$job['total']>0){
+  //     $pdo_job->insert('put_website', ['case_id'=>$_POST['case_id']]);
+  //     echo json_encode(['success'=>true, 'msg'=>'已編排匯出']);
+  //   }
+  //   else{
+  //     echo json_encode(['success'=>false, 'msg'=>'匯出已編排，請勿重複!!']);
+  //   }
 
-  }
+  // }
   
   //-- 匯出index.html+ 壓縮檔案 --
   elseif($_POST['type']=='index_html'){
@@ -161,5 +152,8 @@
      //-- 路徑加密 --
      echo urlencode(aes_encrypt_7($aes_key, 'website_tmp/'.$_POST['case_id'].'.zip'));
    }
+
+   $pdo_new->close();
+   //$pdo_job->close();
  }
 ?>

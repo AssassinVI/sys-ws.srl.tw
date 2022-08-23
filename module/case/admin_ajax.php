@@ -1,10 +1,14 @@
 <?php 
  require '../../core/inc/config.php';
  require '../../core/inc/function.php';
+ require '../../core/inc/pdo_fun_calss.php';
 
 
  
  if ($_POST) {
+
+   $pdo_job= new PDO_fun('job');
+
    if ($_POST['type']=='company') {
 
      //---------------- 查詢專案 --------------
@@ -49,6 +53,38 @@
    	
       echo json_encode($row);
    }
+
+   //-- 匯出網站(資料庫紀錄) --
+   elseif($_POST['type']=='put_website'){
+      $job=$pdo_job->select("SELECT COUNT(*) as total FROM put_website WHERE case_id=:case_id", ['case_id'=>$_POST['case_id']], 'one');
+      if((int)$job['total']<1){
+        $pdo_job->insert('put_website', ['case_id'=>$_POST['case_id']]);
+        echo json_encode(['success'=>true, 'msg'=>'已編排匯出']);
+      }
+      else{
+        echo json_encode(['success'=>false, 'msg'=>'匯出已編排，請勿重複!!']);
+      }
+   }
+
+   //-- 下載網站 --
+   elseif($_POST['type']=='download_website'){
+      //-- 路徑加密 --
+      echo urlencode(aes_encrypt_7($aes_key, '/home2/srltw/sys-ws.srl.tw/system/cron_job/website_tmp/'.$_POST['case_id'].'.zip'));
+   }
+
+
+   //-- 刪除匯出檔案 --
+   elseif($_POST['type']=='delete_website'){
+     $path='/home2/srltw/sys-ws.srl.tw/system/cron_job/website_tmp/'.$_POST['case_id'].'.zip';
+     if(is_file($path)){
+       unlink($path);
+       echo json_encode(['success'=>true, 'msg'=>'已刪除檔案']);
+     }
+     else{
+       echo json_encode(['success'=>false, 'msg'=>'此檔案不存在']);
+     }
+   }
   
+   $pdo_job->close();
  }
 ?>

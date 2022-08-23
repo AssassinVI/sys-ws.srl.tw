@@ -166,9 +166,9 @@ if ($_GET) {
                 <div class="ibox-title">
                     <h3>畫面預覽</h3>
                     <button type="button" id="if_reload" class="btn btn-info">重新整理</button>
-                    <div class="ibox-tools" style="float: right;">
+                    <!-- <div class="ibox-tools" style="float: right;">
                         <button type="button" id="put_website" class="btn btn-success">匯出網頁</button>
-                    </div>
+                    </div> -->
                 </div>
                 <div class="ibox-content iframe_div ">
                     <?php 
@@ -192,69 +192,78 @@ if ($_GET) {
 $(document).ready(function() {
 
 
-    $("#put_website").click(function(e) {
-        var url = location.href;
-        var case_id = url.split('Tb_index=');
-        case_id = case_id[1];
+    // $("#put_website").click(function(e) {
+    //     var url = location.href;
+    //     var case_id = url.split('Tb_index=');
+    //     case_id = case_id[1];
 
-        // -- 複製資料 --
-        $.ajax({
-            type: "POST",
-            url: "case_fun_box_ajax.php",
-            data: {
-                type: 'put_website',
-                case_id: case_id
-            },
-            beforeSend: function() {
+    //     // -- 複製資料 --
+    //     $.ajax({
+    //         type: "POST",
+    //         url: "case_fun_box_ajax.php",
+    //         data: {
+    //             type: 'put_website',
+    //             case_id: case_id
+    //         },
+    //         dataType: "json",
+    //         beforeSend: function() {
 
-                $('body').append(
-                    '<div id="put_website_div" style="position: fixed; top: 0; left: 0; z-index: 100; width: 100%; height: 100%; background-color: rgb(255 255 255 / 0.8); display: flex;  justify-content: center; align-items: center;"><p>匯出中...</p></div>'
-                );
-            },
-            complete: function() {
+    //             $('body').append(
+    //                 '<div id="put_website_div" style="position: fixed; top: 0; left: 0; z-index: 100; width: 100%; height: 100%; background-color: rgb(255 255 255 / 0.8); display: flex;  justify-content: center; align-items: center;"><p>匯出中...</p></div>'
+    //             );
+    //         },
+    //         complete: function() {
 
                 
-            },
-            success: function(data) {
+    //         },
+    //         success: function(data) {
 
-                //-- 複製index.html --
-                var case_num = case_id.substr(4);
-                $.ajax({
-                    type: "POST",
-                    url: "https://ws.srl.tw/cs/" + case_num + "/",
-                    success: function(data) {
+    //             if(data['success']){
+    //                 $('#put_website_div').remove();
+    //                 alert(data['msg']);
+    //             }
+    //             else{
+    //                 $('#put_website_div').remove();
+    //                 alert(data['msg']);
+    //             }
+                
 
-                        var html_txt=data.replace(/\.\.\/\.\.\//g, '');
-                            html_txt=html_txt.replace('https://ws.srl.tw/cs/'+case_num+'/img/', 'img/');
-                            html_txt=html_txt.replace(new RegExp('../product_html/'+case_id+'/img/', 'g'), 'img/');
-                            html_txt=html_txt.replace(/https\:\/\/ws.srl.img\//g, 'img/');
-                            html_txt=html_txt.replace(/googleMapTool/g, 'https://ws.srl.tw/googleMapTool');
+    //             //-- 複製index.html --
+    //             var case_num = case_id.substr(4);
+    //             $.ajax({
+    //                 type: "POST",
+    //                 url: "https://ws.srl.tw/cs/" + case_num + "/",
+    //                 success: function(data) {
 
-                        $.ajax({
-                            type: "POST",
-                            url: "case_fun_box_ajax.php",
-                            data: {
-                                type: 'index_html',
-                                case_id: case_id,
-                                html:html_txt
-                            },
-                            success: function (data) {
+    //                     var html_txt=data.replace(/\.\.\/\.\.\//g, '');
+    //                         html_txt=html_txt.replace('https://ws.srl.tw/cs/'+case_num+'/img/', 'img/');
+    //                         html_txt=html_txt.replace(new RegExp('../product_html/'+case_id+'/img/', 'g'), 'img/');
+    //                         html_txt=html_txt.replace(/https\:\/\/ws.srl.img\//g, 'img/');
+    //                         html_txt=html_txt.replace(/googleMapTool/g, 'https://ws.srl.tw/googleMapTool');
 
-                                $('#put_website_div').remove();
+    //                     $.ajax({
+    //                         type: "POST",
+    //                         url: "case_fun_box_ajax.php",
+    //                         data: {
+    //                             type: 'index_html',
+    //                             case_id: case_id,
+    //                             html:html_txt
+    //                         },
+    //                         success: function (data) {
 
-                                alert('匯出');
+    //                             $('#put_website_div').remove();
+
+    //                             alert('匯出');
                                 
-                                location.replace('case_zip_down.php?file='+data);
-                            }
-                        });
-                    }
-                });
+    //                             location.replace('case_zip_down.php?file='+data);
+    //                         }
+    //                     });
+    //                 }
+    //             });
 
-            }
-        });
-
-
-    });
+    //         }
+    //     });
+    // });
 
 
 

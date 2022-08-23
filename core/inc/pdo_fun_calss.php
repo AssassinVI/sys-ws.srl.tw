@@ -53,6 +53,9 @@ class PDO_fun{
             case 'history':
 				$this->_dbname=DB_HIS_NAME;
 				break;
+            case 'job':
+                $this->_dbname=DB_JOB_NAME;
+                break;
 			default:
                 $this->_dbname=DB_NAME;
 				break;

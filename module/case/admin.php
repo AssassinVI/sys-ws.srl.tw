@@ -1,6 +1,19 @@
 <?php include("../../core/page/header01.php");//載入頁面heaer01?>
 <style type="text/css">
 	#sel_com{ padding: 5px; margin-right: 5px; }
+	a.disabled{
+		pointer-events: none;
+		cursor: no-drop;
+	}
+	.download_box{
+		display: inline-block;
+		position: relative;
+	}
+	.download_box .del_btn{
+		position: absolute;
+		top: -5px;
+		right: -5px;
+	}
 </style>
 <?php include("../../core/page/header02.php");//載入頁面heaer02?>
 <?php 
@@ -97,7 +110,7 @@ if ($_GET) {
 								<th class="none_420">ID</th>
 								<th>專案名稱</th>
 								<th class="none_420">google分析</th>
-								<th class="none_420">排序</th>
+								<!-- <th class="none_420">排序</th> -->
 								<th class="none_420">啟用/停用</th>
 								<th class="none_420">版本</th>
 								<th class="text-right">管理</th>
@@ -105,8 +118,13 @@ if ($_GET) {
 							</tr>
 						</thead>
 						<tbody id="case_tb">
+						
+						<?php 
+						 $pdo_job= new PDO_fun('job');
 
-						<?php $i=1; while ($row=$sql->fetch(PDO::FETCH_ASSOC)) {
+						$i=1; 
+						
+						while ($row=$sql->fetch(PDO::FETCH_ASSOC)) {
 
 							
 							 if($_SESSION['admin_per']=='admin' || in_array($row['Tb_index'], $_SESSION['group_case'])){
@@ -133,32 +151,60 @@ if ($_GET) {
                               	  $version='<span style="color:#bc2cd5; padding: 5px 10px; border: 1px solid; background: #fbe3ff;">特殊版</span>';
                               		break;
                               }
-							?>
-							<tr>
-								<td><?php echo $i?></td>
-								<td class="none_420"><?php echo $row['Tb_index'];?></td>
-								<td style="font-size: 1.5em;"><?php echo $row['aTitle'];?></td>
-								<td class="none_420"><?php echo $row['google_code']; ?></td>
-								<td class="none_420"><input type="number" class="sort_in" name="OrderBy" Tb_index="<?php echo $row['Tb_index'];?>" value="<?php echo $row['OrderBy'] ?>"></td>
-								<td class="none_420"><?php echo $OnLineOrNot;?></td>
-								<td class="none_420"><span style="color:#2196f3"><?php echo $version;?></span></td>
+							  
+							  $website_job=$pdo_job->select("SELECT COUNT(*) as total FROM put_website WHERE case_id=:case_id", ['case_id'=>$row['Tb_index']], 'one');
+							   
+							 
+							  if((int)$website_job['total']>0){
+								$put_web='<a class="none_420 btn btn-default btn-sm put_website disabled" case_id="'.$row['Tb_index'].'" href="javascript:;" >
+											<i class="fa fa-cogs" aria-hidden="true"></i> 匯出中..
+										</a>';
+							  }
+							  elseif( is_file('/home2/srltw/sys-ws.srl.tw/system/cron_job/website_tmp/'.$row['Tb_index'].'.zip')){
+								$put_web='<span class="download_box">
+										  <a class="none_420 btn btn-primary btn-sm download_website" case_id="'.$row['Tb_index'].'" href="javascript:;" >
+											<i class="fa fa-file-zip-o" aria-hidden="true"></i> 下載網站
+										  </a>
+										  <a href="javascript:;" class="badge badge-danger del_btn" case_id="'.$row['Tb_index'].'">x</a>
+										  </span>';
+							  }
+							  else{
+								$put_web='<a class="none_420 btn btn-default btn-sm put_website" case_id="'.$row['Tb_index'].'" href="javascript:;" >
+												<i class="fa fa-file-zip-o" aria-hidden="true"></i> 匯出網站
+											</a>';
+							  }
 
-								<td class="text-right">
-                                
-								<a class="none_420 btn btn-default btn-sm" href="manager.php?MT_id=<?php echo $_GET['MT_id']?>&Tb_index=<?php echo $row['Tb_index'];?>" ><i class="fa fa-pencil-square" aria-hidden="true"></i>編輯</a>
-								
-								<a class="none_420 btn btn-danger btn-sm" href="admin.php?MT_id=<?php echo $_GET['MT_id']?>&Tb_index=<?php echo $row['Tb_index'];?>&aTitle=<?php echo $row['aTitle'];?>" 
-								   onclick="if (!confirm('確定要刪除 [<?php echo $row['aTitle']?>] ?')) {return false;}"><i class="fa fa-trash" aria-hidden="true"></i>刪除</a>
 
-					
-								</td>
-							</tr>
-						<?php 
+							  
 
-						$i++; 
-					    }
-					   }
-					?>
+							  echo '
+							   <tr>
+									<td>'.$i.'</td>
+									<td class="none_420">'.$row['Tb_index'].'</td>
+									<td style="font-size: 1.5em;">'.$row['aTitle'].'</td>
+									<td class="none_420">'.$row['google_code'].'</td>
+									<!--<td class="none_420"><input type="number" class="sort_in" name="OrderBy" Tb_index="'.$row['Tb_index'].'" value="'.$row['OrderBy'].'"></td>-->
+									<td class="none_420">'.$OnLineOrNot.'</td>
+									<td class="none_420"><span style="color:#2196f3">'.$version.'</span></td>
+
+									<td class="text-right">
+										<a class="none_420 btn btn-success btn-sm" href="history.php?MT_id='.$_GET['MT_id'].'&Tb_index='.$row['Tb_index'].'" >
+											<i class="fa fa-history" aria-hidden="true"></i> 歷史紀錄(建構中)
+										</a>
+										'.$put_web.'
+										<a class="none_420 btn btn-default btn-sm" href="manager.php?MT_id='.$_GET['MT_id'].'&Tb_index='.$row['Tb_index'].'" ><i class="fa fa-pencil-square" aria-hidden="true"></i> 編輯</a>
+										<a class="none_420 btn btn-danger btn-sm" href="admin.php?MT_id='.$_GET['MT_id'].'&Tb_index='.$row['Tb_index'].'&aTitle='.$row['aTitle'].'" 
+										onclick="if (!confirm(\'確定要刪除 ['.$row['aTitle'].'] ?\')) {return false;}"><i class="fa fa-trash" aria-hidden="true"></i> 刪除</a>
+									</td>
+								</tr> 
+							  ';
+
+							  $i++; 
+							}
+						}
+
+						$pdo_job->close();
+					   ?>
 						</tbody>
 					</table>
 				</div>
@@ -176,26 +222,25 @@ if ($_GET) {
             'type'                  : 'iframe'
 		 });
       
-      //-------------- 排序 ---------------
+        //-------------- 排序 ---------------
 		$("#sort_btn").click(function(event) {
-		        
-        var arr_OrderBy=new Array();
-        var arr_Tb_index=new Array();
+			var arr_OrderBy=new Array();
+			var arr_Tb_index=new Array();
 
-          $(".sort_in").each(function(index, el) {
-             
-             arr_OrderBy.push($(this).val());
-             arr_Tb_index.push($(this).attr('Tb_index'));
-          });
+			$(".sort_in").each(function(index, el) {
+				
+				arr_OrderBy.push($(this).val());
+				arr_Tb_index.push($(this).attr('Tb_index'));
+			});
 
-          var data={ 
-                        OrderBy: arr_OrderBy,
-                       Tb_index: arr_Tb_index 
-                      };
-             ajax_in('admin.php', data, 'no', 'no');
+			var data={ 
+							OrderBy: arr_OrderBy,
+						Tb_index: arr_Tb_index 
+						};
+				ajax_in('admin.php', data, 'no', 'no');
 
-          alert('更新排序');
-         location.replace('admin.php?MT_id=<?php echo $_GET['MT_id'];?>');
+			alert('更新排序');
+			location.replace('admin.php?MT_id=<?php echo $_GET['MT_id'];?>');
 		});
 
      
@@ -250,6 +295,80 @@ if ($_GET) {
 	 			$('#case_tb').append(txt);
 				}
 			});
+			
+		});
+
+
+		//-- 匯出網站 --
+		$('.put_website').click(function (e) { 
+			let _this=$(this);
+			let case_id=$(this).attr('case_id');
+
+			if(confirm('是否要匯出網站??')){
+				$.ajax({
+					type: "POST",
+					url: "admin_ajax.php",
+					data: {
+						type: 'put_website',
+						case_id: case_id
+					},
+					dataType: "json",
+					success: function (data) {
+						if(data['success']){
+							alert(data['msg']);
+							_this.addClass('disabled');
+							_this.html('<i class="fa fa-cogs" aria-hidden="true"></i> 匯出中..');
+						}
+						else{
+							alert(data['msg']);
+						}
+					}
+				});
+			}
+		
+		});
+
+		//-- 下載網站 --
+		$('.download_website').click(function (e) { 
+			let case_id=$(this).attr('case_id');
+			$.ajax({
+				type: "POST",
+				url: "admin_ajax.php",
+				data: {
+					type: 'download_website',
+					case_id: case_id
+				},
+				success: function (data) {
+					//console.log(data);
+					location.replace('download_website.php?file='+data);
+				}
+			});
+		});
+
+
+		//-- 刪除匯出的檔案 --
+		$('.del_btn').click(function (e) { 
+			if(confirm('是否要刪除匯出的檔案??')){
+				let case_id=$(this).attr('case_id');
+				$.ajax({
+					type: "POST",
+					url: "admin_ajax.php",
+					data: {
+						type: 'delete_website',
+						case_id: case_id
+					},
+					dataType: "json",
+					success: function (data) {
+						if(data.success){
+							alert(data.msg);
+							location.reload();
+						}
+						else{
+							alert(data.msg);
+						}
+					}
+				});
+			}
 			
 		});
 	});
