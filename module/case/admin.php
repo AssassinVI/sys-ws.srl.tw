@@ -189,7 +189,7 @@ if ($_GET) {
 
 									<td class="text-right">
 										<a class="none_420 btn btn-success btn-sm" href="history.php?MT_id='.$_GET['MT_id'].'&Tb_index='.$row['Tb_index'].'" >
-											<i class="fa fa-history" aria-hidden="true"></i> 歷史紀錄(建構中)
+											<i class="fa fa-history" aria-hidden="true"></i> 歷史紀錄
 										</a>
 										'.$put_web.'
 										<a class="none_420 btn btn-default btn-sm" href="manager.php?MT_id='.$_GET['MT_id'].'&Tb_index='.$row['Tb_index'].'" ><i class="fa fa-pencil-square" aria-hidden="true"></i> 編輯</a>
