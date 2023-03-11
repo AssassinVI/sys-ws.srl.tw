@@ -1,4 +1,5 @@
-<?php session_start();
+<?php 
+// session_start();
 require 'core/inc/config.php';
 require 'core/inc/function.php';
 require 'core/inc/pdo_fun_calss.php';
@@ -8,6 +9,7 @@ require 'core/inc/pdo_fun_calss.php';
   header("Location: https://srl.tw/newsite/sys/login.php");
   exit();
 }*/
+
 ?>
 <?php
 $pdo_new=new PDO_fun;

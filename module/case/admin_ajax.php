@@ -69,13 +69,13 @@
    //-- 下載網站 --
    elseif($_POST['type']=='download_website'){
       //-- 路徑加密 --
-      echo urlencode(aes_encrypt_7($aes_key, '/home2/srltw/sys-ws.srl.tw/system/cron_job/website_tmp/'.$_POST['case_id'].'.zip'));
+      echo urlencode(aes_encrypt_7($aes_key, '/home/srltw/sys-ws.srl.tw/system/cron_job/website_tmp/'.$_POST['case_id'].'.zip'));
    }
 
 
    //-- 刪除匯出檔案 --
    elseif($_POST['type']=='delete_website'){
-     $path='/home2/srltw/sys-ws.srl.tw/system/cron_job/website_tmp/'.$_POST['case_id'].'.zip';
+     $path='/home/srltw/sys-ws.srl.tw/system/cron_job/website_tmp/'.$_POST['case_id'].'.zip';
      if(is_file($path)){
        unlink($path);
        echo json_encode(['success'=>true, 'msg'=>'已刪除檔案']);
