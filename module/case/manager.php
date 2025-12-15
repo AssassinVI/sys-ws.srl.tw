@@ -56,15 +56,20 @@ if ($_POST) {
 	 //--------------------------------------- 建立專案檔案 ----------------------------------
       create_dir(WS_PATH.'product_html/'.$Tb_index);
 
+	  //-- 隱私權政策 --
+	  copy(WS_PATH.'product/privacy.php', WS_PATH.'product_html/' . $Tb_index . '/privacy.php');
+	  //-- 感謝頁 --
+	  copy(WS_PATH.'product/thanks.php', WS_PATH.'product_html/' . $Tb_index . '/thanks.php');
+
       if ($_POST['version']=='1') { //-- 正常版 --
     	  copy(WS_PATH.'product/product_empty.php', WS_PATH.'product_html/' . $Tb_index . '/Default.php');
       }
       elseif($_POST['version']=='2'){ //-- 全屏滑動版 --
         copy(WS_PATH.'product/product_empty_slide.php', WS_PATH.'product_html/' . $Tb_index . '/Default.php');
       }
-    	elseif($_POST['version']=='0'){//-- 簡易版 --
-    		copy(WS_PATH.'product/product_easy.php', WS_PATH.'product_html/' . $Tb_index . '/Default.php');
-    	}
+		elseif($_POST['version']=='0'){//-- 簡易版 --
+			copy(WS_PATH.'product/product_easy.php', WS_PATH.'product_html/' . $Tb_index . '/Default.php');
+		}
 
      
      //===================== 專案LOGO ========================
@@ -150,6 +155,7 @@ if ($_POST) {
 
 
     $is_auto_an=empty($_POST['is_auto_an']) ? 0:1;
+	$is_secret=empty($_POST['is_secret']) ? 0:1;
 
 	$param=  [          'Tb_index'=>$Tb_index,
 			              'com_id'=>$_POST['com_id'],
@@ -166,9 +172,12 @@ if ($_POST) {
 			             'marquee'=>$_POST['marquee'],
 			         'google_code'=>$_POST['google_code'],
 				'google_view_code'=>$_POST['google_view_code'],
+						'ga4_code'=>$_POST['ga4_code'],
+						'ga4_view_code'=>$_POST['ga4_view_code'],
 					   'head_code'=>$_POST['head_code'],
 					   'body_code'=>$_POST['body_code'],
                 'is_auto_an'=>$is_auto_an,
+				'is_secret'=>$is_secret,
 			         'description'=>$_POST['description'],
 			             'KeyWord'=>$_POST['KeyWord'],
 			           'StartDate'=>date('Y-m-d'),
@@ -323,6 +332,7 @@ if ($_POST) {
 
     
     $is_auto_an=empty($_POST['is_auto_an']) ? 0:1;
+	$is_secret=empty($_POST['is_secret']) ? 0:1;
     
     $param=[  
 			              'com_id'=>$_POST['com_id'],
@@ -339,9 +349,12 @@ if ($_POST) {
 			             'marquee'=>$_POST['marquee'],
 			         'google_code'=>$_POST['google_code'],
 				'google_view_code'=>$_POST['google_view_code'],
+					    'ga4_code'=>$_POST['ga4_code'],
+				   'ga4_view_code'=>$_POST['ga4_view_code'],
 				       'head_code'=>$_POST['head_code'],
 					   'body_code'=>$_POST['body_code'],
                       'is_auto_an'=>$is_auto_an,
+					  'is_secret'=>$is_secret,
 			         'description'=>$_POST['description'],
 			             'KeyWord'=>$_POST['KeyWord'],
 					  	 'EndDate'=>$_POST['EndDate'],
@@ -365,6 +378,7 @@ if ($_GET) {
  	$row=pdo_select('SELECT * FROM build_case WHERE Tb_index=:Tb_index', $where);
  	$com_id=empty($row['com_id'])? '' : $row['com_id'];
     $is_auto_an=$row['is_auto_an']==0 ? '':'checked';
+	$is_secret=$row['is_secret']==0 ? '':'checked';
 	$EndDate=empty($row['EndDate']) ? date('Y-m-d', strtotime('+2 year')) : $row['EndDate'];
 }
 ?>
@@ -441,13 +455,15 @@ if ($_GET) {
 							<div class="col-md-4">
 								<select name="ad_making" class="form-control">
 									<option <?php echo $selected=$row['ad_making']=='j' ? 'selected' : '';?> value="j">聯創數位</option>
-									<option <?php echo $selected=$row['ad_making']=='c' ? 'selected' : '';?> value="c">元際數位</option>
-									<option <?php echo $selected=$row['ad_making']!='j' && $row['ad_making']!='c' ? 'selected' : '';?> value="o">其他</option>
+									<option <?php echo $selected=$row['ad_making']=='y' ? 'selected' : '';?> value="y">亞儂媒體</option>
+									<option <?php echo $selected=$row['ad_making']!='j' && $row['ad_making']!='y' ? 'selected' : '';?> value="o">其他</option>
 								</select>
+
+								<label > <input name="is_secret" type="checkbox" value="1" <?php echo $is_secret;?>>是否隱密廣告製作 </label>
 							</div>
                             
                             <?php 
-                              if ($row['ad_making']!='j' && $row['ad_making']!='c') {
+                              if ($row['ad_making']!='j' && $row['ad_making']!='y') {
                               	$other_dis='display: block;';
                               	$ad_making=explode(',', $row['ad_making']);
                               }
@@ -592,6 +608,7 @@ if ($_GET) {
 							<label class="col-md-2 control-label" for="aPic">分享圖片</label>
 							<div class="col-md-10">
 								<input type="file" name="aPic" class="form-control" accept="image/*" id="aPic" onchange="file_viewer_load_new(this, '#img_box')">
+								<span class="text-danger">圖片尺寸：621 X 468</span>
 							</div>
 						</div>
 
@@ -614,8 +631,9 @@ if ($_GET) {
 
 						<div class="form-group">
 							<label class="col-md-2 control-label" for="format">格局說明</label>
-							<div class="col-md-10">
-								<input type="text" class="form-control" id="format" name="format" value="<?php echo $row['format'];?>">
+							<div class="col-md-4">
+								<textarea class="form-control" name="format" id="format" rows="5"><?php echo $row['format'];?></textarea>
+
 							</div>
 						</div>
 
@@ -655,7 +673,7 @@ if ($_GET) {
 							</div>
 						</div>
 
-						<div class="form-group">
+						<div class="form-group d-none">
 							<label class="col-md-2 control-label" for="marquee">跑馬燈</label>
 							<div class="col-md-10">
 								<input type="text" class="form-control" id="marquee" name="marquee" value="<?php echo $row['marquee'];?>">
@@ -663,7 +681,7 @@ if ($_GET) {
 						</div>
 
 
-						<div class="form-group">
+						<div class="form-group d-none">
 							<label class="col-md-2 control-label" for="activity_song">背景音樂</label>
 							<div class="col-md-10">
 								<input type="file" name="activity_song" class="form-control" accept="audio/*" id="activity_song" onchange="audio_load(this, '#audio_box')">
@@ -689,7 +707,7 @@ if ($_GET) {
 
 
 
-						<div class="form-group">
+						<div class="form-group ">
 							<label class="col-md-2 control-label" for="activity_img">活動圖片</label>
 							<div class="col-md-10">
 								<input type="file" name="activity_img" class="form-control" accept="image/*" id="activity_img" onchange="file_viewer_load_new(this, '#img_box2')">
@@ -726,7 +744,22 @@ if ($_GET) {
 								<span>例如:123456789，9碼</span>
 							</div>
 
+							
 						</div>
+
+			<div class="form-group">
+					<label class="col-md-2 control-label text-warning" for="ga4_code">Google GA4 追蹤碼</label>
+							<div class="col-md-4">
+								<input type="text" class="form-control" id="ga4_code" name="ga4_code" value="<?php echo $row['ga4_code'];?>">
+								<span>例如:G-MVNEPQAA5A</span>
+					</div>
+					<label class="col-md-2 control-label text-warning" for="ga4_view_code">Google GA4 檢視碼</label>
+							<div class="col-md-4">
+								<input type="text" class="form-control" id="ga4_view_code" name="ga4_view_code" value="<?php echo $row['ga4_view_code'];?>">
+								<span>例如:(資源設定->資源ID)123456789，9碼</span>
+					</div>
+
+			</div>
 
             <div class="form-group">
               <label class="col-md-2 control-label "></label>
@@ -799,13 +832,13 @@ if ($_GET) {
 
 
 						<div class="form-group">
-							<label class="col-md-2 control-label" for="on_gtm">啟用預設GTM</label>
+							<label class="col-md-2 control-label" for="on_gtm">啟用預設Code</label><!-- Tim用GTM，改預設為取消 -->
 							<div class="col-md-10">
 								
 								<label><input type="radio" name="on_gtm" value="1"> 使用</label>｜
 								<label><input type="radio" name="on_gtm" value="0"> 取消</label>
 
-								<input type="hidden" id="on_gtm_input" value="<?php echo $num=!isset($row['on_gtm']) ? 1 : $row['on_gtm']; ?>">
+								<input type="hidden" id="on_gtm_input" value="<?php echo $num=!isset($row['on_gtm']) ? 0 : $row['on_gtm']; ?>">
 								
 							</div>
 						</div>
@@ -893,7 +926,7 @@ if ($_GET) {
 
           $("#submit_btn").click(function(event) {
 
-          	 if ($('[name="aPic"]').val()!='' && $('[name="aPic"]').val().search(/(\.jpg|\.jpeg|\.bmp|\.gif|\.png)$/i)==-1) {
+          	 if ($('[name="aPic"]').val()!='' && $('[name="aPic"]').val().search(/(\.jpg|\.jpeg|\.bmp|\.gif|\.webp|\.png)$/i)==-1) {
           	 	alert('您的專案LOGO圖檔格式錯誤!!');
           	 	return;
           	 }

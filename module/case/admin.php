@@ -5,11 +5,12 @@
 		pointer-events: none;
 		cursor: no-drop;
 	}
-	.download_box{
+	.download_box,
+	.static_page_box{
 		display: inline-block;
 		position: relative;
 	}
-	.download_box .del_btn{
+	.del_btn{
 		position: absolute;
 		top: -5px;
 		right: -5px;
@@ -53,7 +54,7 @@ if ($_GET) {
 
    $com_id=empty($_GET['com_id']) ? '':$_GET['com_id'];
 
-   $sql=$pdo->prepare("SELECT Tb_index, aTitle, OrderBy, OnLineOrNot, version, google_code, EndDate
+   $sql=$pdo->prepare("SELECT Tb_index, aTitle, OrderBy, OnLineOrNot, version, google_code, ga4_code, EndDate
    					   FROM build_case WHERE com_id LIKE :com_id AND OnLineOrNot!=-1 ORDER BY OnLineOrNot DESC, OrderBy DESC, Tb_index DESC");
    $sql->execute( ['com_id'=>'%'.$com_id.'%'] );
 
@@ -103,13 +104,14 @@ if ($_GET) {
 			 </div>
 			<div class="ibox-content">
 				<div class="table-responsive">
-					<table class="table no-margin">
+					<table class="table no-margin table-hover">
 						<thead>
 							<tr>
 								<th>#</th>
 								<th class="none_420">ID</th>
 								<th>專案名稱</th>
 								<th class="none_420">google分析</th>
+								<th class="none_420">google GA4</th>
 								<!-- <th class="none_420">排序</th> -->
 								<th class="none_420">啟用/停用</th>
 								<th class="none_420">版本</th>
@@ -160,7 +162,7 @@ if ($_GET) {
 											<i class="fa fa-cogs" aria-hidden="true"></i> 匯出中..
 										</a>';
 							  }
-							  elseif( is_file('/home2/srltw/sys-ws.srl.tw/system/cron_job/website_tmp/'.$row['Tb_index'].'.zip')){
+							  elseif( is_file('/home/srltw/sys-ws.srl.tw/system/cron_job/website_tmp/'.$row['Tb_index'].'.zip')){
 								$put_web='<span class="download_box">
 										  <a class="none_420 btn btn-primary btn-sm download_website" case_id="'.$row['Tb_index'].'" href="javascript:;" >
 											<i class="fa fa-file-zip-o" aria-hidden="true"></i> 下載網站
@@ -175,6 +177,20 @@ if ($_GET) {
 							  }
 
 
+							  if(is_file('/home/srltw/ws.srl.tw/product_html/'.$row['Tb_index'].'/index.html')){
+								$static_page='<span class="static_page_box">
+											    <a class="none_420 btn btn-default btn-sm static_page_btn" case_id="'.$row['Tb_index'].'" href="javascript:;" >更新靜態網頁</a>
+												<a href="javascript:;" class="badge badge-danger del_btn" case_id="'.$row['Tb_index'].'">x</a>
+											  </span>';
+							  }
+							  else{
+								$static_page='<a class="none_420 btn btn-success btn-sm static_page_btn" case_id="'.$row['Tb_index'].'" href="javascript:;" >產生靜態網頁</a>';
+							  }
+							  
+
+
+
+
 							  
 
 							  echo '
@@ -183,11 +199,13 @@ if ($_GET) {
 									<td class="none_420">'.$row['Tb_index'].'</td>
 									<td style="font-size: 1.5em;">'.$row['aTitle'].'</td>
 									<td class="none_420">'.$row['google_code'].'</td>
+									<td class="none_420">'.$row['ga4_code'].'</td>
 									<!--<td class="none_420"><input type="number" class="sort_in" name="OrderBy" Tb_index="'.$row['Tb_index'].'" value="'.$row['OrderBy'].'"></td>-->
 									<td class="none_420">'.$OnLineOrNot.'</td>
 									<td class="none_420"><span style="color:#2196f3">'.$version.'</span></td>
 
 									<td class="text-right">
+										'.$static_page.'
 										<a class="none_420 btn btn-success btn-sm" href="history.php?MT_id='.$_GET['MT_id'].'&Tb_index='.$row['Tb_index'].'" >
 											<i class="fa fa-history" aria-hidden="true"></i> 歷史紀錄
 										</a>
@@ -347,7 +365,7 @@ if ($_GET) {
 
 
 		//-- 刪除匯出的檔案 --
-		$('.del_btn').click(function (e) { 
+		$('.download_box .del_btn').click(function (e) { 
 			if(confirm('是否要刪除匯出的檔案??')){
 				let case_id=$(this).attr('case_id');
 				$.ajax({
@@ -369,8 +387,61 @@ if ($_GET) {
 					}
 				});
 			}
-			
 		});
+
+		//-- 刪除靜態網頁 --
+		$('.static_page_box .del_btn').click(function (e) { 
+			if(confirm('是否要刪除靜態網頁??')){
+				let case_id=$(this).attr('case_id');
+				$.ajax({
+					type: "POST",
+					url: "admin_ajax.php",
+					data: {
+						type: 'delete_static_page',
+						case_id: case_id
+					},
+					dataType: "json",
+					success: function (data) {
+						if(data.success){
+							alert(data.msg);
+							location.reload();
+						}
+						else{
+							alert(data.msg);
+						}
+					}
+				});
+			}
+		});
+
+
+		//-- 產生靜態網頁 --
+		$('.static_page_btn').click(function (e) { 
+			e.preventDefault();
+			let _this=$(this);
+			let case_id=$(this).attr('case_id');
+			$.ajax({
+				type: "POST",
+				url: "admin_ajax.php",
+				data: {
+					type: 'static_page',
+					case_id: case_id
+				},
+				dataType: "json",
+				success: function (data) {
+					if(data.success){
+						alert(data.msg);
+						_this.removeClass('btn-success');
+						_this.addClass('btn-default');
+						_this.html('更新靜態網頁');
+					}
+					else{
+						alert(data.msg);
+					}
+				}
+			});
+		});
+		
 	});
 </script>
 <?php  include("../../core/page/footer02.php");//載入頁面footer02.php?>

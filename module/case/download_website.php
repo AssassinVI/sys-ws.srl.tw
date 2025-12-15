@@ -3,6 +3,7 @@
  require '../../core/inc/function.php';
 
 $file=urldecode(aes_decrypt_7($aes_key, $_GET['file']));
+// echo aes_decrypt_7($aes_key, $_GET['file']);
 header("Cache-Control: public"); 
 header("Content-Description: File Transfer"); 
 header('Content-disposition: attachment; filename='.basename($file)); //檔名   

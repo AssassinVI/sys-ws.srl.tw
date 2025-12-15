@@ -401,21 +401,21 @@ function funbox_all() {
             $.each(data, function() {
 
                 // -- 錨點名稱 --
-                var an_name = this['fun_id'].substr(0, 2) == 'an' ? '：' + anchor_name(this[
+                var an_name = this['fun_id']!=null && this['fun_id'].substr(0, 2) == 'an' ? '：' + anchor_name(this[
                     'fun_id']) : '';
 
                 // -- 判斷上線 --
                 var OnLineOrNot = this['OnLineOrNot'] == '0' ? '- ( 未啟用 )' : '';
 
 
-
+                let fun_id=this['fun_id']==null ? '':this['fun_id'];
                 var txt = '<li class="' + this['btn_type'] + '" id="' + this['Tb_index'] + '">' +
                     '<i class="fa ' + this['btn_icon'] + '"></i> ' + this['box_name'] +an_name + OnLineOrNot +
                     '<a href="#" title="' + this['box_name'] +
                     '" class="pull-right btn btn-xs btn-danger del_funbox">刪除</a>' +
                     '<a style="margin-right:5px;" href="' + this['aUrl'] +
                     '?MT_id=<?php echo $_GET['MT_id'];?>&Tb_index=' + this['case_id'] + '&fun_id=' +
-                    this['fun_id'] + '&rel_id=' + this['Tb_index'] +
+                    fun_id + '&rel_id=' + this['Tb_index'] +
                     '" class="pull-right btn btn-xs btn-primary iframe_box">編輯</a>' +
                     
                     '</li>';

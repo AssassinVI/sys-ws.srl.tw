@@ -3,10 +3,10 @@
 //-------------------------------- 自訂獲取專案分析(所有時間) ------------------------------------
 
 // Load the Google API PHP Client Library.
-require '/home2/srltw/sys-ws.srl.tw/system/google_an/google-api-php-client-2.2.2/vendor/autoload.php';
-require '/home2/srltw/sys-ws.srl.tw/core/inc/config.php';
-require '/home2/srltw/sys-ws.srl.tw/core/inc/function.php';
-require '/home2/srltw/sys-ws.srl.tw/core/inc/pdo_fun_calss.php';
+require '/home/srltw/sys-ws.srl.tw/system/google_an/google-api-php-client-2.2.2/vendor/autoload.php';
+require '/home/srltw/sys-ws.srl.tw/core/inc/config.php';
+require '/home/srltw/sys-ws.srl.tw/core/inc/function.php';
+require '/home/srltw/sys-ws.srl.tw/core/inc/pdo_fun_calss.php';
 
 $analytics = initializeAnalytics();
 
@@ -209,7 +209,7 @@ function an_user($VIEW_ID, $analytics, $case_id, $set_time )
 //-- 新訪者/回訪者 --
 function an_userType($VIEW_ID, $analytics, $case_id, $set_time)
 {
-  $response = getReport($VIEW_ID, $analytics, date('Y-m-d',strtotime($set_time)), date('Y-m-d',strtotime($set_time)), 'sessions', 'userType');
+  $response = getReport($VIEW_ID, $analytics, date('Y-m-d',strtotime($set_time)), date('Y-m-d',strtotime($set_time)), 'sessions', 'newVsReturning');
   $result=printResults($response);
   $result=explode('|', $result);
   $type=explode(',', $result[0]);
@@ -217,6 +217,13 @@ function an_userType($VIEW_ID, $analytics, $case_id, $set_time)
   $type_num=count($type);
 
   for ($i=0; $i <$type_num ; $i++){
+
+    if($type[$i]=='new'){
+      $type[$i]='New Visitor';
+    }
+    elseif($type[$i]=='returning'){
+      $type[$i]='Returning Visitor';
+    }
     $param=[
       //'Tb_index'=>'an'.date('YmdHis').$i,
       'case_id'=>$case_id,

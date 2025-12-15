@@ -50,7 +50,7 @@ $analytics = initializeAnalytics();
     an_media($row['google_view_code'], $analytics, $row['Tb_index']);
     an_src($row['google_view_code'], $analytics, $row['Tb_index']);
     an_timeOnSite($row['google_view_code'], $analytics, $row['Tb_index']);
-    sleep(5);
+    sleep(20);
   }
 
 
@@ -188,7 +188,7 @@ function an_user($VIEW_ID, $analytics, $case_id)
 function an_userType($VIEW_ID, $analytics, $case_id)
 {
   $all_day=date('Y-m-d',strtotime('-1 day'));
-  $response = getReport($VIEW_ID, $analytics, $all_day, $all_day, 'sessions', 'userType');
+  $response = getReport($VIEW_ID, $analytics, $all_day, $all_day, 'sessions', 'newVsReturning');
   $result=printResults($response);
   $result=explode('|', $result);
   $type=explode(',', $result[0]);

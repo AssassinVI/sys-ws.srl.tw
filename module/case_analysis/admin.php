@@ -91,7 +91,7 @@ if ($_GET) {
 			 </div>
 			<div class="ibox-content">
 				<div class="table-responsive case_tb_div">
-					<table class="table no-margin">
+					<table class="table no-margin table-hover">
 						<thead>
 							<tr>
 								<th class="none_420">#</th>

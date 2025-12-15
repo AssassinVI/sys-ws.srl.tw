@@ -23,14 +23,14 @@ if ($_POST)
 					  'dt' => 1,
 					  'formatter' => function($d, $row){
 						  
-						  return 'https://srl.tw/sh'.$d.' '.$copyurl_btn;
+						  return 'https://ucy.tw/'.$d.' '.$copyurl_btn;
 					  }
                 ),
 				array('db' => 'url_id',
 					  'dt' => 2,
 					  'formatter' => function($d, $row){
 						  $copyurl_btn = 
-							  '<a class="copyurl_btn" href="javascript:void(0);" title="複製" short_url="https://srl.tw/sh'.$d.'"><img src="images/copy-content.png" width="20"  /></a>';
+							  '<a class="copyurl_btn" href="javascript:void(0);" title="複製" short_url="https://ucy.tw/'.$d.'"><img src="images/copy-content.png" width="20"  /></a>';
 						  return $copyurl_btn;
 					  }
                 ),

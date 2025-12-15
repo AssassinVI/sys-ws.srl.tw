@@ -1,4 +1,5 @@
-<?php include("../../core/page/header01.php");//載入頁面heaer01?>
+<?php 
+include("../../core/page/header01.php");//載入頁面heaer01?>
  <link rel="stylesheet" type="text/css" href="../../css/jquery.treetable.css">
  <style type="text/css">
    #group_table tr:hover{ background-color: #c1eae2; }
@@ -95,7 +96,7 @@
  function tree_tb($Tb_index, $parent_id, $MT_Name, $OrderBy, $is_data, $weblang, $Permissions)
  {
       //------------------ 判斷目前單元是否存在權限陣列裡 -------------------
-      $in_Permissions=in_array($Tb_index, $Permissions);
+      $in_Permissions=isset($Permissions) && in_array($Tb_index, $Permissions);
 
        if ($is_data=='1') { // -- 子單元 --
           $txt=unit_txt($Tb_index, $parent_id, $MT_Name, $OrderBy, 'group_check[]', $in_Permissions);
@@ -211,7 +212,7 @@
   while ($row=$sql->fetch(PDO::FETCH_ASSOC)) {
     
     //------------------ 判斷目前單元是否存在權限陣列裡 -------------------
-    $in_Permissions=in_array($row['Tb_index'], $Permissions);
+    $in_Permissions=isset($Permissions) && in_array($row['Tb_index'], $Permissions);
    
    /* -------------- 第一層 --------------- */
     if (empty($row['parent_id'])) {
@@ -269,7 +270,7 @@
          while ($row_com=$sql->fetch(PDO::FETCH_ASSOC)) {
            
            //------------------ 判斷目前單元是否存在權限陣列裡 -------------------
-           $in_company_id=in_array($row_com['Tb_index'], $company_id);
+           $in_company_id=isset($company_id) && in_array($row_com['Tb_index'], $company_id);
           
            echo folder_txt($row_com['Tb_index'], 'no', $row_com['com_name'], $row_com['OrderBy'], 'group_com[]', $in_company_id);
 
@@ -278,7 +279,7 @@
            $sql_case->execute(['com_id'=>$row_com['Tb_index']]);
            while ($row_case=$sql_case->fetch(PDO::FETCH_ASSOC)) {
 
-             $in_case_id=in_array($row_case['Tb_index'], $case_id);
+             $in_case_id=isset($case_id) && in_array($row_case['Tb_index'], $case_id);
 
               echo unit_txt($row_case['Tb_index'], $row_case['com_id'], $row_case['aTitle'], $row_case['OrderBy'], 'group_case[]', $in_case_id);
            }

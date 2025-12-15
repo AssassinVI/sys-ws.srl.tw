@@ -28,7 +28,10 @@ if ($_GET) {
 
    $com_id=empty($_GET['com_id']) ? '':$_GET['com_id'];
 
-   $sql=$pdo->prepare("SELECT Tb_index, aTitle, OrderBy, OnLineOrNot, version FROM build_case WHERE com_id LIKE :com_id AND OnLineOrNot!=-1 ORDER BY OnLineOrNot DESC, OrderBy DESC, Tb_index DESC");
+   $sql=$pdo->prepare("SELECT Tb_index, aTitle, OrderBy, OnLineOrNot, version, (SELECT COUNT(*) FROM case_news WHERE case_id=bc.Tb_index) as news_num
+   					   FROM build_case as bc
+					   WHERE com_id LIKE :com_id AND OnLineOrNot!=-1 
+					   ORDER BY OnLineOrNot DESC, OrderBy DESC, Tb_index DESC");
    $sql->execute( ['com_id'=>'%'.$com_id.'%'] );
 
    
@@ -76,13 +79,13 @@ if ($_GET) {
 			 </div>
 			<div class="ibox-content">
 				<div class="table-responsive">
-					<table class="table no-margin">
+					<table class="table no-margin table-hover">
 						<thead>
 							<tr>
 								<th>#</th>
 								<th class="none_420">ID</th>
 								<th>專案名稱</th>
-								<th class="none_420">排序</th>
+								<th class="none_420">新聞數量</th>
 								<th class="none_420">啟用/停用</th>
 								<th class="none_420">版本</th>
 								<th class="text-right">管理</th>
@@ -116,7 +119,7 @@ if ($_GET) {
 								<td><?php echo $i?></td>
 								<td class="none_420"><?php echo $row['Tb_index'];?></td>
 								<td style="font-size: 1.5em;"><?php echo $row['aTitle'];?></td>
-								<td class="none_420"><input type="number" class="sort_in" name="OrderBy" Tb_index="<?php echo $row['Tb_index'];?>" value="<?php echo $row['OrderBy'] ?>"></td>
+								<td class="none_420"><?php echo $row['news_num'];?></td>
 								<td class="none_420"><?php echo $OnLineOrNot;?></td>
 								<td class="none_420"><span style="color:#2196f3"><?php echo $version;?></span></td>
 

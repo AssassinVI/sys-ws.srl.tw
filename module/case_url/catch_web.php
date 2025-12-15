@@ -1,108 +1,108 @@
 <?php include("../../core/page/header01.php");//載入頁面heaer01 ?>
 <style type="text/css">
-.md-skin .navbar-static-side,
-.border-bottom,
-body.fixed-sidebar .navbar-static-side {
-    display: none;
-}
-
-#page-wrapper {
-    margin: 0px;
-}
-
-.ibox-tools a {
-    color: #fff;
-}
-
-.table>thead>tr>th,
-.table>tbody>tr>th,
-.table>tfoot>tr>th,
-.table>thead>tr>td,
-.table>tbody>tr>td,
-.table>tfoot>tr>td {
-    font-size: 15px;
-	word-break: break-all;
-}
-
-.loading {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(255, 255, 255, 0.9);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 10;
-}
-
-.loading .box {
-    display: inline-block;
-}
-
-
-
-#save_txtBtn.active,
-#dowload_qrcode.active {
-    display: inline-block;
-}
-
-.view_btn{margin-left:5px;}
-.read_url{font-size:13px !important;}
-
-
-@media (max-width:420px) {
-    #page-wrapper {
-        padding: 0;
-    }
-
-    .ibox-content {
-        padding: 10px;
-    }
-
-    #case_url_div thead,
-    #save_url_div thead {
+    .md-skin .navbar-static-side,
+    .border-bottom,
+    body.fixed-sidebar .navbar-static-side {
         display: none;
     }
 
-    #case_url_div tbody tr,
-    #save_url_div tbody tr {
-        display: block;
-        padding: 10px 5px;
-        border-bottom: 1px solid #e7eaec;
+    #page-wrapper {
+        margin: 0px;
     }
 
-    #case_url_div tbody tr td,
-    #save_url_div tbody tr td {
-        display: block;
-        padding-top: 1px;
-        padding-bottom: 1px;
-        border: 0;
+    .ibox-tools a {
+        color: #fff;
     }
 
-    #case_url_div tbody tr td::before,
-    #save_url_div tbody tr td::before {
-        content: attr(data-th) " : ";
-        font-weight: bold;
-        width: 3em;
+    .table>thead>tr>th,
+    .table>tbody>tr>th,
+    .table>tfoot>tr>th,
+    .table>thead>tr>td,
+    .table>tbody>tr>td,
+    .table>tfoot>tr>td {
+        font-size: 15px;
+        word-break: break-all;
+    }
+
+    .loading {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.9);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 10;
+    }
+
+    .loading .box {
         display: inline-block;
-        color: #0e4e7b;
     }
 
-    #case_url_div tbody tr td a {
-        line-height: 1;
+
+
+    #save_txtBtn.active,
+    #dowload_qrcode.active {
         display: inline-block;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        width: 150px;
     }
 
-    #save_url_div tbody tr td button {
-        padding: 1px 3px;
-    }
+    .view_btn{margin-left:5px;}
+    .read_url{font-size:13px !important;}
 
-}
+
+    @media (max-width:420px) {
+        #page-wrapper {
+            padding: 0;
+        }
+
+        .ibox-content {
+            padding: 10px;
+        }
+
+        #case_url_div thead,
+        #save_url_div thead {
+            display: none;
+        }
+
+        #case_url_div tbody tr,
+        #save_url_div tbody tr {
+            display: block;
+            padding: 10px 5px;
+            border-bottom: 1px solid #e7eaec;
+        }
+
+        #case_url_div tbody tr td,
+        #save_url_div tbody tr td {
+            display: block;
+            padding-top: 1px;
+            padding-bottom: 1px;
+            border: 0;
+        }
+
+        #case_url_div tbody tr td::before,
+        #save_url_div tbody tr td::before {
+            content: attr(data-th) " : ";
+            font-weight: bold;
+            width: 3em;
+            display: inline-block;
+            color: #0e4e7b;
+        }
+
+        #case_url_div tbody tr td a {
+            line-height: 1;
+            display: inline-block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 150px;
+        }
+
+        #save_url_div tbody tr td button {
+            padding: 1px 3px;
+        }
+
+    }
 </style>
 <?php include("../../core/page/header02.php");//載入頁面heaer02?>
 <?php 
@@ -165,7 +165,7 @@ body.fixed-sidebar .navbar-static-side {
 						?>
 
                                 <!-- 建案網址 -->
-                                <a style="display" id="case_url"
+                                <a  id="case_url"
                                     href="https://<?php echo WEB_HOST;?>/cs/<?php echo $Tb_id;?>/"></a>
 
                                 <?php
@@ -276,6 +276,7 @@ body.fixed-sidebar .navbar-static-side {
                                     <!-- <th>圖片</th> -->
                                     <th style="width:250px;">短網址</th>
 									<th class="admin_show">到達網址</th>
+                                    <th class="">到達網址</th>
                                     <th style="width:140px;">媒體名稱</th>
                                     <th>管理</th>
                                     <!-- <th>媒體</th> -->
@@ -552,7 +553,7 @@ function get_shortURL_new(get_url, aTitle, show_id) {
         },
 		dataType:'json',
         success: function(data) {
-			//console.log(data);
+			console.log(data);
             $(show_id).html(data['url']);
             $(show_id).attr('href', data['url']);
 
@@ -612,9 +613,10 @@ function save_QRcode() {
 							<td data-th="#">${x}</td> 
 							<td data-th="短網址">
 								<a target="_blank" href="${this['QRcode_url']}">${this['QRcode_url']}</a>
-								<button class="btn btn-success btn-sm view_btn" qr_id="${this['qr_id']}">檢視</button>
+								<!--<button class="btn btn-success btn-sm view_btn" qr_id="${this['qr_id']}">檢視</button>-->
 							</td>
 							<td class="admin_show read_url" data-th="到達網址"><a title="點擊編輯網址" data-toggle="tooltip" data-placement="top" class="edit_url_btn" QRcode_url="${this['QRcode_url']}" href="javascript:;" >${this['read_url']}</a></td>  
+                            <td class=" read_url" data-th="到達網址">${this['read_url']}</td>  
 							<td data-th="來源">${this['source']}</td> 
 							<td data-th="管理">
 								<a class="btn btn-danger del_url_btn" href="javascript:;" source="${this['source']}" qr_id="${this['Tb_index']}">刪除</a>

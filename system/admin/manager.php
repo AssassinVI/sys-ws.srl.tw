@@ -157,7 +157,7 @@ include("../../core/page/header02.php");//載入頁面heaer02
               </div>
               <label class="col-md-1 control-label" for="admin_pwd">更新密碼</label>
               <div class="col-md-2">
-                <input type="password" class="form-control" id="admin_pwd" value="">
+                <input type="test" class="form-control" id="admin_pwd" value="<?php echo aes_decrypt_7($aes_key, $row['admin_pwd']);?>">
               </div>
             </div>
             <div class="form-group">

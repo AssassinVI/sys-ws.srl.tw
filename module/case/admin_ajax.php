@@ -84,6 +84,52 @@
        echo json_encode(['success'=>false, 'msg'=>'此檔案不存在']);
      }
    }
+
+   //-- 建立靜態網頁 --
+   elseif($_POST['type']=='static_page'){
+      //-- 抓index.html --
+      $ch = curl_init();
+      $case_num = substr($_POST['case_id'], 4);
+
+      // 設定擷取的URL網址
+      curl_setopt($ch, CURLOPT_URL, "https://ws.srl.tw/cs/".$case_num."/Default.php");
+      curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
+    
+      //將curl_exec()獲取的訊息以文件流的形式返回，而不是直接輸出。
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+    
+      //-- 執行 --
+      $temp=curl_exec($ch);
+
+      //$temp=preg_replace('/\.\.\/\.\.\//', '', $temp);
+      //$temp=preg_replace('/https\:\/\/ws\.srl\.tw\/cs\/'.$case_num.'\/img\//', 'img/', $temp);
+      //$temp=preg_replace('/\.\.\/product_html\/'.$job['case_id'].'\/img\//', 'img/', $temp);
+      //$temp=preg_replace('/https\:\/\/ws\.srl\.img\//', 'img/', $temp);
+      //$temp=preg_replace('/googleMapTool/', 'https://ws.srl.tw/googleMapTool', $temp);
+
+      $web_url='/home/srltw/ws.srl.tw/product_html/'.$_POST['case_id'];
+      $web_url_index=$web_url.'/index.html';
+      $fp=fopen($web_url_index, "w");
+      fwrite($fp, $temp);
+      fclose($fp);
+      
+      // 關閉CURL連線
+      curl_close($ch);
+
+      echo json_encode(['success'=>true, 'msg'=>'成功建立']);
+   }
+
+   //-- 刪除靜態網頁 --
+   elseif($_POST['type']=='delete_static_page'){
+    $path='/home/srltw/ws.srl.tw/product_html/'.$_POST['case_id'].'/index.html';
+    if(is_file($path)){
+      unlink($path);
+      echo json_encode(['success'=>true, 'msg'=>'已刪除檔案']);
+    }
+    else{
+      echo json_encode(['success'=>false, 'msg'=>'此檔案不存在']);
+    }
+  }
   
    $pdo_job->close();
  }

@@ -6,7 +6,7 @@ require_once 'phpmailer/class.phpmailer.php';
 function pdo_conn($dataBase_name='srltw_test_case') {
 	$dbanme = $dataBase_name; //資料庫名稱
 	$user_id = 'srltw_website'; //使用者ID
-	$user_pwd = '1qazXSW@3'; //使用者密碼
+	$user_pwd = 'qJeqVQG9QmQE'; //使用者密碼
 
 	$dsn = "mysql:host=localhost;dbname=" . $dbanme;
 	$db = new PDO($dsn, $user_id, $user_pwd);
@@ -31,7 +31,7 @@ $mail = new PHPMailer();                        // 建立新物件
     $mail->Encoding = "base64";
     $mail->WordWrap = 50;                           // 每50個字元自動斷行
     $mail->Username = "server@srl.tw";     // 設定驗證帳號        
-    $mail->Password = "1qazXSW@3";              // 設定驗證密碼        
+    $mail->Password = "PjROzACfFfmK";              // 設定驗證密碼        
     $mail->From = $set_mail;                 // 設定寄件者信箱        
     $mail->FromName = $set_name;                 // 設定寄件者姓名        
     $mail->Subject =$Subject ;                   // 設定郵件標題        

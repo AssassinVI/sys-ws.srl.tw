@@ -18,7 +18,7 @@ include("../../core/page/header02.php");//載入頁面heaer02
 					<table id="table_id_example"  class=" table table-stripped" >
 						<thead>
 						<tr>
-							<th>類型</th>
+                            <th>類型</th>
 							<th>位置</th>
 							<th>標題</th>
 							<th>編輯者</th>

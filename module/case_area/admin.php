@@ -75,7 +75,7 @@ if ($_GET) {
 			 </div>
 			<div class="ibox-content">
 				<div class="table-responsive">
-					<table class="table no-margin">
+					<table class="table no-margin table-hover">
 						<thead>
 							<tr>
 								<th>#</th>

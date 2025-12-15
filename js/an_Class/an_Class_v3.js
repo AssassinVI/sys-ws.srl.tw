@@ -96,7 +96,7 @@ class CaseAn extends Chartjs_class{
                 }
             }
         };
-        let user__datasets = this.line_datasets("使用人數", "#1C84C6", user_data);
+        let user__datasets = this.line_datasets("瀏覽人數", "#1C84C6", user_data);
         let _user_ch = this.line_chart(chart_id, date, [user__datasets], user_line_options);
         return _user_ch;
     }
@@ -408,9 +408,16 @@ class CaseAn extends Chartjs_class{
      */
     media_chart({chart_id='media_chart', user_data}){
         let media_data = [];
-        let media__labels = ['桌機', '手機', '平板'];
+        let media__labels = [];
+        let m_type={
+            "mobile": "手機",
+            "desktop": "桌機",
+            "tablet": "平板",
+            "smart tv": "智慧電視"
+        }
         user_data.forEach(media => {
             media_data.push(media.total);
+            media__labels.push(m_type[media.media_type]);
         });
         let media__datasets = this.bar_datasets("使用人數", "#1C84C6", media_data);
         let _media__chart = this.bar_chart(chart_id, media__labels, [media__datasets]);
@@ -585,6 +592,7 @@ class CaseAn extends Chartjs_class{
                 var html=data;
                 html=html.replaceAll("{{div_class}}", div_class);
                 html=html.replaceAll("{{case_id}}", _each_this['case_id']);
+                html=html.replaceAll("{{anchor_id}}", _each_this['anchor_id']);
                 html=html.replaceAll("{{com_img}}", _each_this['com_img']);
                 html=html.replaceAll("{{index_num}}", index_num);
                 html=html.replaceAll("{{anchor_name}}", _each_this['anchor_name']);
@@ -783,8 +791,18 @@ class CaseAn extends Chartjs_class{
             'google.com'
         ];
     
-        if (data_name.search(/none/) > -1) {
+        if (data_name.search(/(direct)/) > -1) {
             var find_name = '直接連結';
+            show = 1;
+        }
+        else if (data_name.search(/(none)/) > -1) {
+            var new_name = data_name.split('/');
+            var find_name = new_name[0] + '搜尋';
+            show = 0;
+        }
+        else if (data_name.search(/(not set)/) > -1) {
+            var new_name = data_name.split('/');
+            var find_name = new_name[0] + '/一般';
             show = 1;
         }
         else if (data_name.search(/organic/) > -1) {
@@ -793,46 +811,50 @@ class CaseAn extends Chartjs_class{
             show = 1;
         }
         else if (data_name.search(/referral/) > -1) {
-    
-            var new_name = data_name.split('/');
-    
-            if (data_name.search(/m.facebook.com/) > -1) {
-                var find_name = '手機板FB推薦連結';
-                show = 0;
-            }
-            else if (data_name.search(/facebook.com/) > -1) {
-                var find_name = '電腦版FB推薦連結';
-                show = 1;
-            }
-            else if (data_name.search(/market.ltn.com.tw/) > -1) {
-                var find_name = '自由時報推薦連結';
-                show = 1;
-            }
-            else if (data_name.search(/xy168.com.tw/) > -1) {
-                var find_name = '官網推薦連結';
-                show = 1;
-            }
-            else if (data_name.search(/gotv.ctitv.com.tw/) > -1) {
-                var find_name = '中天新聞推薦連結';
-                show = 1;
-            }
-            else {
-                var find_name = new_name[0] + '推薦連結';
-                show = -1;
-            }
-            
-            //-- 不顯示 --
-            for (let i = 0; i < show_0_arr.length; i++) {
-                if (data_name.search(show_0_arr[i]) > -1) {
-                    show = 0;
-                }
-            }
-    
+
+
+             var new_name = data_name.split('/');
+
+             var find_name = new_name[0] + '/推薦連結';
+            show = 1;
+
+            // if (data_name.search(/m.facebook.com/) > -1) {
+            //     var find_name = '手機板FB推薦連結';
+            //     show = 0;
+            // }
+            // else if (data_name.search(/facebook.com/) > -1) {
+            //     var find_name = '電腦版FB推薦連結';
+            //     show = 1;
+            // }
+            // else if (data_name.search(/market.ltn.com.tw/) > -1) {
+            //     var find_name = '自由時報推薦連結';
+            //     show = 1;
+            // }
+            // else if (data_name.search(/xy168.com.tw/) > -1) {
+            //     var find_name = '官網推薦連結';
+            //     show = 1;
+            // }
+            // else if (data_name.search(/gotv.ctitv.com.tw/) > -1) {
+            //     var find_name = '中天新聞推薦連結';
+            //     show = 1;
+            // }
+            // else {
+            //     var find_name = new_name[0] + '推薦連結';
+            //     show = -1;
+            // }
+
+            // //-- 不顯示 --
+            // for (let i = 0; i < show_0_arr.length; i++) {
+            //     if (data_name.search(show_0_arr[i]) > -1) {
+            //         show = 0;
+            //     }
+            // }
+
         }
-        else if (data_name.search(/(not set)/) > -1) {
-            var find_name = '無';
-            show = 0;
-        }
+        // else if (data_name.search(/(not set)/) > -1) {
+        //     var find_name = '無';
+        //     show = 0;
+        // }
         else if (data_name.search(/Campaigns/) > -1) {
             var new_name = data_name.split('/');
             var find_name = new_name[0] + 'google廣告';

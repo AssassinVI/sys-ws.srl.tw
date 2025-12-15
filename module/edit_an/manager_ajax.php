@@ -1,17 +1,19 @@
 <?php 
+//  ini_set('display_errors','1');
+//  error_reporting(E_ALL);
  require '../../core/inc/config.php';
  require '../../core/inc/function.php';
  require '../../core/inc/pdo_fun_calss.php';
  require '../../core/inc/security.php';
 
- $token = filter_input(INPUT_POST, 'tk', FILTER_SANITIZE_STRING);
+//  $token = filter_input(INPUT_POST, 'tk', FILTER_SANITIZE_STRING);
 
-  if (!$token || $token !== $_SESSION['token']) {
-    echo '<p class="error">Error: invalid form submission---</p>';
-    // return 405 http status code
-    header($_SERVER['SERVER_PROTOCOL'] . ' 405 Method Not Allowed');
-    exit;
-  }
+//   if (!$token || $token !== $_SESSION['token']) {
+//     echo '<p class="error">Error: invalid form submission---</p>';
+//     // return 405 http status code
+//     header($_SERVER['SERVER_PROTOCOL'] . ' 405 Method Not Allowed');
+//     exit;
+//   }
 
  if ($_POST) {
    $pdo=new PDO_fun;
@@ -21,7 +23,7 @@
      $row=$pdo->select("SELECT media, source FROM QRcode_tb WHERE case_id=:case_id AND OnlineOrNot=1",
                         ['case_id'=>$_POST['case_id']]);
 
-     $row_num=count($row);                
+     $row_num=empty($row) ? 0 : count($row);                
       for ($i=0; $i <$row_num ; $i++) { 
         $row[$i]['value']=$row[$i]['source'].' / '.$row[$i]['media'];
       }
@@ -79,7 +81,7 @@
      $sex_where=$where;
      $sex_arr=['male', 'female'];
      $sex_post_arr=['one_sex_male', 'one_sex_female'];
-     $sex_num=count($sex_arr);
+     $sex_num=empty($sex_arr) ? 0 : count($sex_arr);
      for ($i=0; $i <$sex_num ; $i++) { 
         $sex_where['sex_type']=$sex_arr[$i];
         $pdo->select("DELETE FROM an_sex WHERE date=:date AND case_id=:case_id AND sex_type=:sex_type", $sex_where);
@@ -113,7 +115,7 @@
      $year_where=$where;
      $year_arr=['25-34', '35-44', '45-54', '55-64', '65+'];
      $year_post_arr=['one_years_25', 'one_years_35', 'one_years_45', 'one_years_55', 'one_years_65'];
-     $year_num=count($year_arr);
+     $year_num=empty($sex_arr) ? 0 : count($sex_arr);
      for ($i=0; $i <$year_num ; $i++) { 
         $year_where['years_type']=$year_arr[$i];
         $pdo->select("DELETE FROM an_years WHERE date=:date AND case_id=:case_id AND years_type=:years_type", $year_where);
@@ -146,7 +148,7 @@
 
      $pdo->select("DELETE FROM an_city WHERE date=:date AND case_id=:case_id ", $where);
      $city_where=$where;
-     $city_num=count($_POST['city_type']);
+     $city_num=empty($_POST['city_type']) ? 0 : count($_POST['city_type']);
      for ($i=0; $i <$city_num ; $i++) { 
         $city_where['city_type']=$_POST['city_type'][$i];
         $ct_type=$pdo->select("SELECT en_name, tw_name FROM taiwan_area");
@@ -186,7 +188,7 @@
      $media_where=$where;
      $media_arr=['desktop', 'mobile', 'tablet'];
      $media_post_arr=['one_media_desktop', 'one_media_mobile', 'one_media_tablet'];
-     $media_num=count($media_arr);
+     $media_num= empty($media_arr) ? 0 : count($media_arr);
      for ($i=0; $i <$media_num ; $i++) { 
         $media_where['media_type']=$media_arr[$i];
         $pdo->select("DELETE FROM an_media WHERE date=:date AND case_id=:case_id AND media_type=:media_type", $media_where);
@@ -209,7 +211,7 @@
      //-- 使用功能 --
      //@@ 歷史(舊) @@
       $od_arr=[ 'tb_event'=>'使用功能' ];
-      $event_num=count($_POST['event_type']);
+      $event_num=empty($_POST['event_type']) ? 0 :  count($_POST['event_type']);
       for ($i=0; $i <$event_num ; $i++){
         $od_arr[$_POST['event_type'][$i]]=0;
       }
@@ -224,7 +226,7 @@
 
      $pdo->select("DELETE FROM an_event WHERE date=:date AND case_id=:case_id ", $where);
      $event_where=$where;
-     $event_num=count($_POST['event_type']);
+     $event_num=empty($_POST['event_type']) ? 0 :  count($_POST['event_type']);
      for ($i=0; $i <$event_num ; $i++) { 
         $event_where['event_type']=$_POST['event_type'][$i];
         $event_where['one_event']=$_POST['one_event'][$i];
@@ -246,7 +248,7 @@
      //-- 流量來源 --
      //@@ 歷史(舊) @@
       $od_arr=[ 'tb_src'=>'流量來源' ];
-      $src_num=count($_POST['src_type']);
+      $src_num=empty($_POST['src_type']) ? 0 :count($_POST['src_type']);
       for ($i=0; $i <$src_num ; $i++){
         $od_arr[$_POST['src_type'][$i]]=0;
       }
@@ -261,7 +263,7 @@
 
      $pdo->select("DELETE FROM an_src WHERE date=:date AND case_id=:case_id ", $where);
      $src_where=$where;
-     $src_num=count($_POST['src_type']);
+     $src_num=empty($_POST['src_type']) ? 0 : count($_POST['src_type']);
      for ($i=0; $i <$src_num ; $i++) { 
         $src_where['src_type']=$_POST['src_type'][$i];
         $src_where['one_src']=$_POST['one_src'][$i];

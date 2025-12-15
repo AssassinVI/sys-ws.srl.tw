@@ -192,7 +192,6 @@ function audio_upload($file_id, $file_name,$case_id)
   else{
     echo '這不是音樂檔';
   }
-    
 }
 
   /* ----------------------- 影片檔案上傳 --------------------------- */
@@ -240,6 +239,43 @@ function audio_upload($file_id, $file_name,$case_id)
     echo '這不是正常的檔案';
   } 
  }
+
+
+ /* ----------------------- 圖片檔案上傳(圖檔壓縮) --------------------------- */
+ function fire_c_upload($file_id, $file_name, $pic_width)
+ {
+   if(test_img($file_name)){
+     $type= pathinfo($file_name, PATHINFO_EXTENSION);
+     if($type=='jpg'){
+      ecstart_convert_jpeg_NEW($_FILES[$file_id]['tmp_name'], '../../img/'.$file_name, $pic_width);
+     }
+     else{
+      move_uploaded_file($_FILES[$file_id]['tmp_name'], '../../img/'.$file_name);
+     }
+     return true;
+   }  
+   else{
+     return false;
+   }
+ }
+ 
+
+//-- 單黨上傳fun --
+function file_ajax_upload($f_name, $FILES, $f_id, $size)
+{
+    $file=$FILES;
+    $type= pathinfo($file['name'], PATHINFO_EXTENSION);
+    $img_name=$f_name.'.'.$type;
+    $is_img= fire_c_upload($f_id, $img_name, $size);
+    if($is_img){
+      return $img_name;
+      //$param['aPic']=$img_name;
+    }
+    else{
+        echo json_encode(['success'=>false, 'msg'=>'圖檔格式錯誤']);
+        exit();
+    }
+}
 
 
 //----------------------------- 建立專案資料夾 ---------------------------------

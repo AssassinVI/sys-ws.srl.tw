@@ -51,20 +51,20 @@ if($_POST){
     $param=[
        'Tb_index'=>$Tb_index,
        'case_id'=>$_GET['Tb_index'],
-       'btn_name'=>$_POST['btn_name'],
+      //  'btn_name'=>$_POST['btn_name'],
        're_name'=>implode(',', $_POST['re_name']),
        're_mail'=>implode(',', $_POST['re_mail']),
        'send_type'=>$_POST['send_type'],
-       'line_Client_ID'=>$_POST['line_Client_ID'],
+      //  'line_Client_ID'=>$_POST['line_Client_ID'],
        'is_custom'=>$is_custom,
        'cus_html'=>$_POST['cus_html'],
        'thanks_url'=>$_POST['thanks_url'],
        'OnLineOrNot'=>$OnLineOrNot
     ];
 
-    if(!empty($_POST['line_Client_Secret'])){
-      $param['line_Client_Secret']=$_POST['line_Client_Secret'];
-    }
+    // if(!empty($_POST['line_Client_Secret'])){
+    //   $param['line_Client_Secret']=$_POST['line_Client_Secret'];
+    // }
 
     pdo_insert('call_us_tb', $param);
     location_up('iframe_call.php?Tb_index='.$_GET['Tb_index'].'&fun_id='.$Tb_index, '功能已成功新增');
@@ -80,20 +80,20 @@ if($_POST){
       $OnLineOrNot=empty($_POST['OnLineOrNot'])? 0:1;
       $is_custom=empty($_POST['is_custom'])? 0:1;
       $param=[
-       'btn_name'=>$_POST['btn_name'],
+       //  'btn_name'=>$_POST['btn_name'],
        're_name'=>implode(',', $_POST['re_name']),
        're_mail'=>implode(',', $_POST['re_mail']),
        'send_type'=>$_POST['send_type'],
-       'line_Client_ID'=>$_POST['line_Client_ID'],
+      //  'line_Client_ID'=>$_POST['line_Client_ID'],
        'is_custom'=>$is_custom,
        'cus_html'=>$_POST['cus_html'],
        'thanks_url'=>$_POST['thanks_url'],
        'OnLineOrNot'=>$OnLineOrNot
     ];
 
-    if(!empty($_POST['line_Client_Secret'])){
-      $param['line_Client_Secret']=$_POST['line_Client_Secret'];
-    }
+    // if(!empty($_POST['line_Client_Secret'])){
+    //   $param['line_Client_Secret']=$_POST['line_Client_Secret'];
+    // }
 
     pdo_update('call_us_tb', $param, ['Tb_index'=>$Tb_index]);
 
@@ -111,8 +111,21 @@ if($_POST){
 
   $row=pdo_select("SELECT * FROM call_us_tb WHERE Tb_index=:Tb_index", ['Tb_index'=>$_GET['fun_id']]);
 
-  $re_name=explode(',', $row['re_name']);
-  $re_mail=explode(',', $row['re_mail']);
+  if(empty($row['re_name'])){
+    $re_name=[
+      '呂',
+      'jacky',
+    ];
+    $re_mail=[
+      'd974252037@gmail.com',
+      'tangi6520@yahoo.com.tw',
+    ];
+  }
+  else{
+    $re_name=explode(',', $row['re_name']);
+    $re_mail=explode(',', $row['re_mail']);
+  }
+  
   
   if(!empty($row['line_notify_token'])){
     $btn_display='style="display:block;"';
@@ -142,13 +155,13 @@ if($_POST){
               <div class="ibox-content">
                 <div class="form-horizontal" >
 
-                  <div class="form-group">
+                  <!-- <div class="form-group">
                       <label class="col-sm-2 control-label">按鈕名稱</label>
                       <div class="col-sm-10">
                         <input type="text" class="form-control" name="btn_name" value="<?php echo $row['btn_name'];?>">
                       </div>
                       
-                    </div>
+                    </div> -->
                   
                   <?php 
                   for ($i=0; $i <8 ; $i++) { 
@@ -173,53 +186,22 @@ if($_POST){
                     <div class="form-group">
                       <label class="col-sm-2 control-label" for="send_type">發信類型</label>
                       <div class="col-sm-10">
-                        <label> <input type="radio" name="send_type" value="0" checked> 系統查看 </label>｜
-                        <label> <input type="radio" name="send_type" value="1"> 直接顯示資料 </label>
+                        <!-- <label> <input type="radio" name="send_type" value="0"> 系統查看 </label>｜ -->
+                        <label> <input type="radio" name="send_type" value="1" checked> 直接顯示資料 </label>
                         <input type="hidden" name="ch_send_type" value="<?php echo $row['send_type'];?>">
                       </div>
                     </div>
 
-                    <div class="form-group" <?php echo $btn_display;?>>
-                        <label class="col-sm-2 control-label" ></label>
-                        <div class="col-sm-10">
-                          <a id="update_notify_btn" class="btn btn-success" href="javascript:;">更新LINE notify</a>
-                        </div>
-                    </div>
-                    <div class="notify_box" <?php echo $box_display;?>>
-                      <div class="form-group">
-                        <label class="col-sm-2 control-label" for="line_Client_ID">LINE notify Client ID</label>
-                        <div class="col-sm-4">
-                          <input type="text" class="form-control" name="line_Client_ID" value="<?php echo $row['line_Client_ID'];?>">
-                        </div>
-                        <label class="col-sm-2 control-label" for="line_Client_Secret">LINE notify Client Secret</label>
-                        <div class="col-sm-4">
-                          <input type="text" class="form-control" name="line_Client_Secret" value="">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label class="col-sm-2 control-label" for="send_type">連接LINE notify</label>
-                        <div class="col-sm-10">
-                          <?php
-                          if(empty($row['line_notify_token']) && !empty($row['line_Client_ID'])){
-                            echo '<a target="_blank" class="btn btn-success" href="https://notify-bot.line.me/oauth/authorize?response_type=code&client_id='.$row['line_Client_ID'].'&redirect_uri=https://ws.srl.tw/line_notify/notify.php&scope=notify&state='.$_GET['Tb_index'].'">連結</a>';
-                          }
-                          elseif(!empty($row['line_notify_token']) && !empty($row['line_Client_ID'])){
-                            echo '<a class="btn btn-danger del_line_btn" href="javascript:;">取消連結</a>';
-                          }
-                          ?>
-                          
-                        </div>
-                      </div>
-                    </div>
+                    
 
                     
-                    <div class="form-group" <?php echo $btn_display;?>>
+                    <!-- <div class="form-group" <?php echo $btn_display;?>>
                       <label class="col-sm-2 control-label" for="send_type">LINE notify 發送測試</label>
                       <div class="col-sm-4">
                         <textarea name="send_test" id="send_test" class="form-control" rows="5"></textarea>
                       </div>
                       <div class="col-sm-2"><a class="btn btn-success send_test_btn" href="javascript:;">發送測試</a></div>
-                    </div>
+                    </div> -->
 
                     <div class="form-group">
                       <label class="col-sm-2 control-label" for="OnLineOrNot">是否上線</label>
@@ -239,12 +221,12 @@ if($_POST){
                         <div class="ibox-title">
                             <h5>自定義表單</h5>
                             <div class="ibox-tools">
-                               <label ><input type="checkbox" name="is_custom" id="is_custom" value="1" <?php echo $check=!isset($row['is_custom']) || $row['is_custom']==1 ? 'checked' : ''; ?>> 是否自定義表單</label>
+                               <label ><input type="checkbox" name="is_custom" id="is_custom" value="1" <?php echo $check=$row['is_custom']==1 ? 'checked' : ''; ?>> 是否自定義表單</label>
                             </div>
                         </div>
                         <div class="ibox-content">
                           <div class="form-horizontal" >
-                              <p>
+                              <!-- <p>
                                 HTML規則：<br>
                                 必填項目input加上"required"的class，屬性加上err_name="欄位名稱"如：
                                 <pre><code class="required_code language-html hljs"></code></pre><br>
@@ -256,7 +238,7 @@ if($_POST){
                                 信箱欄位input加上id="ca_email"<br>
                                 其他欄位input加上id="可自訂"，屬性加上input_name="欄位名稱"如：<br>
                                 <pre><code class="input_code language-html hljs"></code></pre><br>
-                              </p>
+                              </p> -->
                               <div class="form-group">
                                 <textarea id="cus_html" name="cus_html" class="form-control"  rows="30"><?php echo $row['cus_html'];?></textarea>
                               </div>
@@ -329,76 +311,76 @@ if($_POST){
 
 
       //------------------------------ 刪圖檔 ---------------------------------
-      $(".one_del_file").click(function(event) { 
-      if (confirm('是否要刪除檔案?')) {
-       var data={
-                      case_id: $('#Tb_index').val(),
-                      fun_id: $('#fun_id').val(),
-                       show_img: $(this).next().next().val(),
-                            type: 'delete'
-                };  
-               ajax_in('iframe_show.php', data, '成功刪除', 'no');
-               $(this).parent().html('');
-      }
-    });
+    //   $(".one_del_file").click(function(event) { 
+    //   if (confirm('是否要刪除檔案?')) {
+    //    var data={
+    //                   case_id: $('#Tb_index').val(),
+    //                   fun_id: $('#fun_id').val(),
+    //                    show_img: $(this).next().next().val(),
+    //                         type: 'delete'
+    //             };  
+    //            ajax_in('iframe_show.php', data, '成功刪除', 'no');
+    //            $(this).parent().html('');
+    //   }
+    // });
 
     //----------------------------- 取消 LINE連結 -------------------------------
-    $(".del_line_btn").click(function(event){
-      if (confirm('是否要取消LINE連結?')){
-        $.ajax({
-          type: "POST",
-          url: "call_ajax.php",
-          data: {
-            type: 'del_line_notify',
-            case_id: $('#Tb_index').val()
-          },
-          dataType: "json",
-          success: function (data) {
-            if(data.success){
-              alert('已取消連結!!');
-              $('[name="line_Client_ID"]').val('');
-              $('[name="line_Client_Secret"]').val('');
-              $('.del_line_btn').remove();
-            }
-            else{
-              alert(`error：${data.msg}`);
-            }
-          }
-        });
-      }
-    });
+    // $(".del_line_btn").click(function(event){
+    //   if (confirm('是否要取消LINE連結?')){
+    //     $.ajax({
+    //       type: "POST",
+    //       url: "call_ajax.php",
+    //       data: {
+    //         type: 'del_line_notify',
+    //         case_id: $('#Tb_index').val()
+    //       },
+    //       dataType: "json",
+    //       success: function (data) {
+    //         if(data.success){
+    //           alert('已取消連結!!');
+    //           $('[name="line_Client_ID"]').val('');
+    //           $('[name="line_Client_Secret"]').val('');
+    //           $('.del_line_btn').remove();
+    //         }
+    //         else{
+    //           alert(`error：${data.msg}`);
+    //         }
+    //       }
+    //     });
+    //   }
+    // });
 
     //----------------------- 發送 LINE notify TEST ------------------------------
-    $('.send_test_btn').click(function (e) { 
-      if($('#send_test').val()!=''){
-        $.ajax({
-          type: "POST",
-          url: "https://ws.srl.tw/line_notify/send_notify.php",
-          data: {
-            case_id: $('#Tb_index').val(),
-            message: $('#send_test').val()
-          },
-          dataType: "json",
-          success: function (data) {
-            console.log(data);
-            if(data.status==200){
-              alert('成功發送訊息!');
-              $('#send_test').val('');
-            }
-            else{
-              alert('發送失敗\nerror log：'+data.message);
-              $('#send_test').val('');
-            }
-          }
-        });
-      }
-    });
+    // $('.send_test_btn').click(function (e) { 
+    //   if($('#send_test').val()!=''){
+    //     $.ajax({
+    //       type: "POST",
+    //       url: "https://ws.srl.tw/line_notify/send_notify.php",
+    //       data: {
+    //         case_id: $('#Tb_index').val(),
+    //         message: $('#send_test').val()
+    //       },
+    //       dataType: "json",
+    //       success: function (data) {
+    //         console.log(data);
+    //         if(data.status==200){
+    //           alert('成功發送訊息!');
+    //           $('#send_test').val('');
+    //         }
+    //         else{
+    //           alert('發送失敗\nerror log：'+data.message);
+    //           $('#send_test').val('');
+    //         }
+    //       }
+    //     });
+    //   }
+    // });
 
 
     //---------------------- 更新 LINE notify  ------------------------------
-    $('#update_notify_btn').click(function (e) { 
-      $('.notify_box').slideToggle();
-    });
+    // $('#update_notify_btn').click(function (e) { 
+    //   $('.notify_box').slideToggle();
+    // });
 	});
 </script>
 <?php  include("../../core/page/footer02.php");//載入頁面footer02.php?>

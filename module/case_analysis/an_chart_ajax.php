@@ -41,7 +41,12 @@
         //-- 區間每日來信 --
         $user_mail_arr=[];
         $mail_date_arr=[];
-        $user_mail=$pdo->select("SELECT date ,one_event FROM an_event WHERE date BETWEEN :s_date AND :e_date AND case_id=:case_id AND event_type='預約賞屋'", 
+        // $user_mail=$pdo->select("SELECT date ,one_event FROM an_event WHERE date BETWEEN :s_date AND :e_date AND case_id=:case_id AND event_type='預約賞屋'", 
+        //                     ['s_date'=>$s_date, 'e_date'=>$e_date, 'case_id'=>$_POST['case_id']]);
+        $user_mail=$pdo->select("SELECT DATE_FORMAT(set_time, '%Y-%m-%d') as date, COUNT(*) as one_event  
+                                 FROM call_record_tb 
+                                 WHERE set_time BETWEEN :s_date AND :e_date AND case_id=:case_id 
+                                 GROUP BY DATE_FORMAT(set_time, '%Y-%m-%d')", 
                             ['s_date'=>$s_date, 'e_date'=>$e_date, 'case_id'=>$_POST['case_id']]);
 
         foreach ($user_mail as $one_user_mail) {
@@ -56,7 +61,7 @@
         //-- 區間每日來電 --
         $user_phone_arr=[];
         $phone_date_arr=[];
-        $user_phone=$pdo->select("SELECT date ,one_event FROM an_event WHERE date BETWEEN :s_date AND :e_date AND case_id=:case_id AND event_type='撥打手機'", 
+        $user_phone=$pdo->select("SELECT date ,one_event FROM an_event WHERE date BETWEEN :s_date AND :e_date AND case_id=:case_id AND (event_type='撥打手機' OR event_type='撥打電話')", 
                             ['s_date'=>$s_date, 'e_date'=>$e_date, 'case_id'=>$_POST['case_id']]);
 
         foreach ($user_phone as $one_user_phone) {
@@ -90,20 +95,29 @@
         $month_user=$pdo->select("SELECT SUM(one_user) as total FROM an_user WHERE date BETWEEN :s_date AND :e_date AND case_id=:case_id GROUP BY case_id", 
                                  ['s_date'=>date('Y-m-d', strtotime('-31 day')), 'e_date'=>date('Y-m-d', strtotime('-1 day')), 'case_id'=>$_POST['case_id']], 'one');
 
-        //-- 總人數 --
-        $total_user=$pdo->select("SELECT SUM(one_user) as total FROM an_user WHERE case_id=:case_id GROUP BY case_id", 
-                                 ['case_id'=>$_POST['case_id']], 'one');
-
-        //-- 總來信 --
-        $all_mail=$pdo->select("SELECT SUM(one_event) as total FROM an_event WHERE case_id=:case_id AND event_type='預約賞屋' GROUP BY case_id",
-                                ['case_id'=>$_POST['case_id']], 'one');
-        //-- 總來電 --
-        $all_phone=$pdo->select("SELECT SUM(one_event) as total FROM an_event WHERE case_id=:case_id AND event_type='撥打手機' GROUP BY case_id",
-                                ['case_id'=>$_POST['case_id']], 'one');
-
 
         $date_sql=empty($_POST['s_date']) ? "":"date BETWEEN :s_date AND :e_date AND";
         $sql_param=['s_date'=>$s_date, 'e_date'=>$e_date, 'case_id'=>$_POST['case_id']];
+
+
+        //-- 總人數 --
+        $total_user=$pdo->select("SELECT SUM(one_user) as total 
+                                  FROM an_user 
+                                  WHERE $date_sql case_id=:case_id GROUP BY case_id", 
+                                 $sql_param, 'one');
+
+
+        //-- 總來信 --
+        // $all_mail=$pdo->select("SELECT SUM(one_event) as total FROM an_event WHERE case_id=:case_id AND event_type='預約賞屋' GROUP BY case_id",
+        //                         ['case_id'=>$_POST['case_id']], 'one');
+        $all_mail=$pdo->select("SELECT COUNT(*) as total FROM `call_record_tb` WHERE case_id=:case_id GROUP BY case_id",
+                                ['case_id'=>$_POST['case_id']], 'one');
+        //-- 總來電 --
+        $all_phone=$pdo->select("SELECT SUM(one_event) as total FROM an_event WHERE case_id=:case_id AND (event_type='撥打手機' OR event_type='撥打電話') GROUP BY case_id",
+                                ['case_id'=>$_POST['case_id']], 'one');
+
+
+        
 
         //-- 使用者性別 --
         $sex=$pdo->select("SELECT sex_type, SUM(one_sex) as total 
@@ -156,8 +170,19 @@
         $media=$pdo->select("SELECT media_type, SUM(one_media) as total 
                            FROM an_media 
                            WHERE $date_sql case_id=:case_id AND media_type!=''
-                           GROUP BY media_type", 
+                           GROUP BY media_type
+                           ORDER BY total DESC", 
                             $sql_param);
+        //-- 超過總數減去超出值 --
+        $media_total=0;
+        foreach ($media as $one_media) {
+          $media_total+=(int)$one_media['total'];
+        }
+        if($media_total>(int)$total_user['total']){
+            $media[0]['total']=(int)$media[0]['total']-($media_total-(int)$total_user['total']);
+        }
+                          
+
 
         //-- 使用者瀏覽器 --
         $broswer=$pdo->select("SELECT broswer_type, SUM(one_broswer) as total 
@@ -167,6 +192,14 @@
                            ORDER BY SUM(one_broswer) DESC
                            LIMIT 0,6", 
                            $sql_param);
+        //-- 超過總數減去超出值 --
+        $broswer_total=0;
+        foreach ($broswer as $one_broswer) {
+          $broswer_total+=(int)$one_broswer['total'];
+        }
+        if($broswer_total>(int)$total_user['total']){
+            $broswer[0]['total']=(int)$broswer[0]['total']-($broswer_total-(int)$total_user['total']);
+        }
 
         //-- 使用的功能 --
         $event=$pdo->select("SELECT event_type, SUM(one_event) as total 
@@ -185,7 +218,7 @@
                                   WHERE case_id=:case_id AND src_type!='' AND date LIKE CONCAT(YEAR(NOW()),'-',DATE_FORMAT(NOW(),'%m'),'%')
                                   GROUP BY src_type
                                   ORDER BY SUM(one_src) DESC
-                                  LIMIT 0,5", 
+                                  LIMIT 0,6", 
                                 ['case_id'=>$_POST['case_id']]);
 
 
@@ -195,7 +228,7 @@
                            WHERE $date_sql case_id=:case_id AND src_type!=''
                            GROUP BY src_type
                            ORDER BY SUM(one_src) DESC
-                           LIMIT 0,5", 
+                           LIMIT 0,6", 
                             $sql_param);
 
 
@@ -297,6 +330,11 @@
                             WHERE $date_sql case_id=:case_id AND userType!=''
                             GROUP BY userType", 
                             $sql_param);
+        //-- 超過總數減去超出值 --
+        $return_visit_total=(int)$return_visit[0]['total']+(int)$return_visit[1]['total'];
+        if($return_visit_total>(int)$total_user['total']){
+            $return_visit[1]['total']=$return_visit[1]['total']-($return_visit_total-(int)$total_user['total']);
+        }
         
 
         //--  --

@@ -42,7 +42,7 @@ if ($_GET) {
 		<h2 class="text-primary"><?php echo $case_name['aTitle'];?> 列表</h2>
 	   <div class="new_div">
 
-        <a id="excel_down" href="put_excel.php?case_id=<?php echo $_GET['case_id'];?>" class="btn btn-success">下載Excel檔</a>
+        <a id="excel_down" href="put_csv.php?case_id=<?php echo $_GET['case_id'];?>" class="btn btn-success">下載Excel檔</a>
 
 	    <!--<a href="manager.php?MT_id=<?php //echo $_GET['MT_id'];?>">
         <button type="button" class="btn btn-default">
@@ -70,9 +70,12 @@ if ($_GET) {
 						</thead>
 						<tbody>
 
-						<?php $i=1; while ($row=$sql->fetch(PDO::FETCH_ASSOC)) {?>
+						<?php 
+						$total=$sql->rowCount(); 
+						$i=1; 
+						while ($row=$sql->fetch(PDO::FETCH_ASSOC)) {?>
 							<tr>
-								<td><?php echo $i?></td>
+								<td><?php echo $total?></td>
 								<td class="none_420"><?php echo $row['Tb_index'] ?></td>
 								<td><?php echo $row['use_name'] ?></td>
 								<td><?php echo $row['phone'] ?></td>
@@ -110,7 +113,7 @@ if ($_GET) {
 					
 								</td>
 							</tr>
-						<?php $i++; }?>
+						<?php $total--; }?>
 						</tbody>
 					</table>
 				</div>

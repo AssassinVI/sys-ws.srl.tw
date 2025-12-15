@@ -49,7 +49,7 @@ if($_POST){
     $range=implode('|', $_POST['range']);
     $keyword=implode('|', $_POST['keyword']);
     $active=implode('|', $_POST['active']);
-    $life_zoom=implode('|', $_POST['life_zoom']);
+    // $life_zoom=implode('|', $_POST['life_zoom']);
     $traffic_loc=empty($_POST['traffic_loc']) ? '' : implode('|', $_POST['traffic_loc']);
     $traffic_name=empty($_POST['traffic_name']) ? '' : implode('|', $_POST['traffic_name']);
     $fun_loc=empty($_POST['fun_loc']) ? '' : implode('|', $_POST['fun_loc']);
@@ -109,7 +109,7 @@ if($_POST){
        'life_range'=>$range,
        'life_keyword'=>$keyword,
        'life_active'=>$active,
-       'life_zoom'=>$life_zoom,
+      //  'life_zoom'=>$life_zoom,
        'traffic_loc'=>$traffic_loc,
        'traffic_name'=>$traffic_name,
        'traffic_img'=>$traffic_img_txt,
@@ -134,7 +134,7 @@ if($_POST){
     $range=implode('|', $_POST['range']);
     $keyword=implode('|', $_POST['keyword']);
     $active=implode('|', $_POST['active']);
-    $life_zoom=implode('|', $_POST['life_zoom']);
+    // $life_zoom=implode('|', $_POST['life_zoom']);
     $traffic_loc=empty($_POST['traffic_loc']) ? '' : implode('|', $_POST['traffic_loc']);
     $traffic_name=empty($_POST['traffic_name']) ? '' : implode('|', $_POST['traffic_name']);
     $fun_loc=empty($_POST['fun_loc']) ? '' : implode('|', $_POST['fun_loc']);
@@ -205,17 +205,6 @@ if($_POST){
           $Tb_index_new='ll'.date('YmdHis').rand(0,99);
           $life_id=empty($_POST['life_id-'.$type_one][$i]) ? $Tb_index_new:$_POST['life_id-'.$type_one][$i];
 
-          //-- 上傳圖檔判斷 --
-          // if(!empty( $_FILES['life_photo-'.$type_one]['name'][$i])){
-
-          //   $type=explode('.', $_FILES['life_photo-'.$type_one]['name'][$i]);
-          //   $life_photo=$life_id.'_'.$type_one.'_'.date('His').'_'.$i.'.'.$type[count($type)-1];
-          //   more_fire_upload('life_photo-'.$type_one, $i, $life_photo, $_GET['Tb_index']);
-          // }
-          // else{
-          //   $life_photo=empty($_POST['old_file-'.$type_one][$i]) ? '':$_POST['old_file-'.$type_one][$i];
-          // }
-
           $is_loc=$new_pdo->select("SELECT COUNT(*) as total FROM life_location WHERE Tb_index=:Tb_index AND case_id=:case_id", 
                                   ['Tb_index'=>$life_id, 'case_id'=>$_GET['Tb_index']], 'one');
 
@@ -229,6 +218,18 @@ if($_POST){
                 'life_eva'=>$_POST['life_eva-'.$type_one][$i],
                 'OrderBy'=>($i+1)
             ];
+
+            //-- 上傳圖檔判斷 --
+            if(!empty( $_FILES['life_photo-'.$type_one]['name'][$i])){
+
+              $type=explode('.', $_FILES['life_photo-'.$type_one]['name'][$i]);
+              $life_photo=$life_id.'_'.$type_one.'_'.date('His').'_'.$i.'.'.$type[count($type)-1];
+              more_fire_upload('life_photo-'.$type_one, $i, $life_photo, $_GET['Tb_index']);
+              $param['life_photo']=$life_photo;
+            }
+            // else{
+            //   $life_photo=empty($_POST['old_file-'.$type_one][$i]) ? '':$_POST['old_file-'.$type_one][$i];
+            // }
 
           if(empty($is_loc['total'])){
             //-- 新增食衣住行 --
@@ -258,7 +259,7 @@ if($_POST){
        'life_range'=>$range,
        'life_keyword'=>$keyword,
        'life_active'=>$active,
-       'life_zoom'=>$life_zoom,
+      //  'life_zoom'=>$life_zoom,
        'traffic_loc'=>$traffic_loc,
        'traffic_name'=>$traffic_name,
        'traffic_img'=>$traffic_img_txt,
@@ -288,7 +289,7 @@ if($_POST){
 
   $range=explode('|', $row['life_range']);
   $keyword=explode('|', $row['life_keyword']);
-  $life_zoom=explode('|', $row['life_zoom']);
+  // $life_zoom=explode('|', $row['life_zoom']);
   $life_active=explode('|', $row['life_active']);
 
 ?>
@@ -364,9 +365,10 @@ if($_POST){
               </div>
             </div>
             <?php
-              //$life_name=['食','醫','住','育','樂','公園','公車站','咖啡店','銀行','商店','加油站','藥局'];
               $life_name=['食','醫','住','育','公園','公車站','商店','咖啡店','銀行','加油站','ATM'];
-              $life_type=['food','doctor','lodging','school','park','bus_station','convenience_store','cafe','bank','gas_station','atm'];
+              // $life_name=['食','醫','住','行','育','樂','公園','公車站','商店','咖啡店','銀行','加油站','ATM'];
+              $life_type=['food','doctor','lodging', 'school', 'park','bus_station','convenience_store','cafe','bank','gas_station','atm'];
+              // $life_type=['food','doctor','lodging','traffic','school','fun','park','bus_station','convenience_store','cafe','bank','gas_station','atm'];
               $life_num=count($life_name);
 
               for ($i=0; $i <$life_num ; $i++) { 
@@ -378,8 +380,15 @@ if($_POST){
                 foreach ($life_row as $life_one) {
                   //-- 圖 --
                   if(!empty($life_one['life_photo'])){
-                    $img_html='<a target="_blank" href="https://'.WEB_HOST.'/product_html/'.$life_one['case_id'].'/img/'.$life_one['life_photo'].'"><div class="o_l_file" style="background: url(https://'.WEB_HOST.'/product_html/'.$life_one['case_id'].'/img/'.$life_one['life_photo'].') center; background-size: cover;"><p>目前圖檔</p> </div></a>
+                    if(preg_match("/\bplaces\.googleapis\.com\b/", $life_one['life_photo'])){ 
+                      $img_html='<div class="o_l_file" style="background: url('.$life_one['life_photo'].') center; background-size: cover;"><p>目前圖檔</p> </div>
+                      <input type="hidden" name="old_file-'.$life_type[$i].'[]" value="'.$life_one['life_photo'].'">';
+                    }
+                    else{
+                      $img_html='<a target="_blank" href="https://'.WEB_HOST.'/product_html/'.$life_one['case_id'].'/img/'.$life_one['life_photo'].'"><div class="o_l_file" style="background: url(https://'.WEB_HOST.'/product_html/'.$life_one['case_id'].'/img/'.$life_one['life_photo'].') center; background-size: cover;"><p>目前圖檔</p> </div></a>
                     <input type="hidden" name="old_file-'.$life_type[$i].'[]" value="'.$life_one['life_photo'].'">';
+                    }
+                    
                   }
                   else{
                     $img_html='<input type="hidden" name="old_file-'.$life_type[$i].'[]" value="">';
@@ -433,11 +442,11 @@ if($_POST){
                 echo '
                 <div class="form-group">
                  <label class="col-sm-2 control-label" ><a class="show_detail" href="javascript:;"><i class="fa fa-chevron-down"></i></a> "'.$life_name[$i].'"範圍:</label>
-                 <div class="col-sm-1">
+                 <div class="col-sm-2">
                    <input class="form-control" type="text" name="range[]" placeholder="請輸入地圖範圍" value="'.$range[$i].'">
                  </div>
 
-                 <label class="col-sm-1 control-label" >"'.$life_name[$i].'"關鍵字:</label>
+                 <label class="col-sm-2 control-label" >"'.$life_name[$i].'"關鍵字:</label>
                  <div class="col-sm-2">
                    <input class="form-control" type="text" name="keyword[]" placeholder="請輸入關鍵字" value="'.$keyword[$i].'">
                  </div>
@@ -450,11 +459,15 @@ if($_POST){
                   <input type="hidden" class="active_ch" value="'.$active_ch.'">
                  </div>
 
-                 <label class="col-sm-2 control-label" >"'.$life_name[$i].'"地圖縮放比:</label>
+                 <div class="col-sm-2">
+                  <button type="button" class="btn btn-success get_life_btn" life_type="'.$life_type[$i].'">google抓取新內容</button>
+                 </div>
+
+                 <!--<label class="col-sm-2 control-label" >"'.$life_name[$i].'"地圖縮放比:</label>
                  <div class="col-sm-2">
                    <input class="form-control" type="text" name="life_zoom[]" placeholder="請輸入比率" value="'.$life_zoom[$i].'">
                    <span class="text-danger">縮放比數字越大地圖越近，反之越小越遠</span>
-                 </div>
+                 </div>-->
 
                  <div class="col-sm-12 life_detail_div" style="display:none;">
                  <button type="button" class="btn btn-success add_life" life_type="'.$life_type[$i].'">+ 新增</button>
@@ -613,7 +626,27 @@ if($_POST){
         }
       });
   }
+
+
 	$(document).ready(function() {
+
+   //-- 抓google資料NEW --
+   $('.get_life_btn').click(function (e) { 
+    e.preventDefault();
+    if($('[name="location"]').val()==''){
+      alert('請先輸入地圖座標');
+      return false;
+    }
+    else{
+      const center=$('[name="location"]').val().split(',');
+      const lat=center[0];
+      const lng=center[1];
+      const type=$(this).attr('life_type');
+      const radius=$(this).closest('.form-group').find('[name="range[]"]').val();
+      const Tb_index=$('[name="Tb_index"]').val();
+      window.open(`get_life.php?lat=${lat}&lng=${lng}&radius=${radius}&type=${type}&Tb_index=${Tb_index}`, '_blank', 'width=800,height=700,scrollbars=yes');
+    }
+   });
 
     //-- 預設啟用 --
     $.each($('.active_ch'), function (index, valueOfElement) { 

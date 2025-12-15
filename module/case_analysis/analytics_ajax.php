@@ -277,7 +277,7 @@
 		 $date_sql=""; 
 	   }
 
-	   $row=$new_pdo->select("SELECT media_type, SUM(one_media) as one_media_num FROM an_media WHERE case_id=:Tb_index AND media_type!='' $date_sql GROUP BY media_type", $where);
+	   $row=$new_pdo->select("SELECT media_type, SUM(one_media) as one_media_num FROM an_media WHERE case_id=:Tb_index AND media_type!='' $date_sql GROUP BY media_type ORDER BY one_media_num DESC", $where);
 	   $type='';
 	   $num='';
 	   foreach ($row as $one) {

@@ -91,10 +91,13 @@
            <tbody>
                <?php 
                  $row=$pdo->select("SELECT * FROM QRcode_tb WHERE case_id=:case_id ORDER BY Tb_index DESC", ['case_id'=>$_GET['case_id']]);
+                 
                  foreach ($row as $one) {
+                    $url_id=explode('srl.tw/sh', $one['QRcode_url']);
+                    $url='https://ucy.tw/'.$url_id[1];
                     echo '<tr>
-                            <td class="QRcode_tb" qr_code_url="'.$one['QRcode_url'].'"></td>
-                            <td>'.$one['QRcode_url'].'</td>
+                            <td class="QRcode_tb" qr_code_url="'.$url.'"></td>
+                            <td>'.$url.'</td>
                             <td>'.$one['source'].'</td>
                         </tr>';
                  }

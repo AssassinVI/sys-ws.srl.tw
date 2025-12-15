@@ -120,6 +120,39 @@ if ($_SESSION['admin_per']!='admin') {
 
         .ui-state-highlight, .ui-widget-content .ui-state-highlight, 
         .ui-widget-header .ui-state-highlight{ border: 1px solid #dad55e; background: #fffa90; color: #777620;}
+        
+        #an_completion .img_box img{
+         position: relative;
+        }
+        #an_completion .img_box img::before{
+         content: '';
+         position: absolute;
+         left: 0;
+         right: 0;
+         top: 0;
+         bottom: 0;
+         margin: auto;
+         height: 120px;
+         width: 120px;
+         z-index: 10;
+         background-image: url(../../images/web-site.png);
+         background-size: contain;
+         mix-blend-mode: overlay;
+        }
+
+        #an_completion .img_box img:after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            background: rgb(34,50,76);
+            background: -moz-linear-gradient(45deg, rgb(110 148 212) 0%,rgb(25 176 146) 100%);
+            background: -webkit-linear-gradient(45deg, rgb(110 148 212) 0%,rgb(25 176 146) 100%);
+            background: linear-gradient(45deg, rgb(110 148 212) 0%,rgb(25 176 146) 100%);
+         }
 
         @media (max-width: 550px){
            .ibox-content{padding:10px;}

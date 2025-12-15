@@ -8,7 +8,7 @@
  	
  	private $_dbname = 'srltw_test_case'; //資料庫名稱
 	private $_user_id = 'srltw_website'; //使用者ID
-	private $_user_pwd = '1qazXSW@3'; //使用者密碼
+	private $_user_pwd = 'qJeqVQG9QmQE'; //使用者密碼
 	
 	public $pdo_obj; //PDO物件
     public $tb_name; //新增、修改、刪除 資料表名稱

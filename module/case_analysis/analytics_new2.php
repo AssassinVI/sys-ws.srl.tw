@@ -469,7 +469,7 @@ if ($_GET) {
              <div class="line_ch_div">
                 <div class=" float-e-margins">
                       <div class="ibox-title">
-                          <h5>每日使用人數 (人數)</h5>
+                          <h5>每日瀏覽人數 (人數)</h5>
                       </div>
                       <div class="ibox-content" style="overflow-x: auto;">
                           <div class="line_chart_div">
@@ -860,7 +860,7 @@ if ($_GET) {
                   <div class="ibox-title">
                       <h5>預約賞屋來信</h5>
                       <div class="tool">
-                        <a href="../../module/msg/put_excel.php?case_id=<?php echo $_GET['Tb_index'];?>" class="btn btn-primary btn-sm">下載Excel檔</a>
+                        <a href="../../module/msg/put_csv.php?case_id=<?php echo $_GET['Tb_index'];?>" class="btn btn-primary btn-sm">下載Excel檔</a>
                         <button type="button" class="btn btn-success btn-sm slide_mail_btn">展開</button>
                       </div>
                       
@@ -1067,7 +1067,7 @@ if ($_GET) {
 <script src="../../js/plugins/chartjs/3.6.0/chartjs-plugin-annotation.min.js"></script>
 <script src="../../js/plugins/chartjs/3.6.0/chartjs-plugin-datalabels.min.js"></script>
 <script src="../../js/an_Class/Chart_class_v3.js?18"></script>
-<script src="../../js/an_Class/an_Class_v3.js?18"></script>
+<script src="../../js/an_Class/an_Class_v3.js?20"></script>
 
 
 
@@ -1720,11 +1720,15 @@ function get_an ({destroy=false}) {
           let min_user_index = data.data.user.indexOf(Math.min(...data.data.user));
 
           //-- 一周人數 --
-          $('#week_users .user_num').html(fm_Thousands(data.data.week_user) + '人');
+          let week_user=data.data.week_user==null ? 0:data.data.week_user;
+          $('#week_users .user_num').html(fm_Thousands(week_user) + '人');
+          
           //-- 一月人數 --
-          $('#month_users .user_num').html(fm_Thousands(data.data.month_user) + '人');
+          let month_user=data.data.month_user==null ? 0:data.data.month_user;
+          $('#month_users .user_num').html(fm_Thousands(month_user) + '人');
           //-- 總人數 --
-          $('#all_users .user_num').html(fm_Thousands(data.data.total_user) + '人');
+          let total_user=data.data.total_user==null ? 0:data.data.total_user;
+          $('#all_users .user_num').html(fm_Thousands(total_user) + '人');
 
           if ($('#an_StartDate').val() != '') {
               $('#month_src_div').addClass('date_none');
@@ -1776,8 +1780,8 @@ function get_an ({destroy=false}) {
             $('#adv_mails .user_num').html(total_user_mail + '封');
             $('#adv_phones .user_num').html(total_user_phone + '通');
             $('#adv_calls .user_num').html(adv_call + '%');
-            $('#adv_phones .title_txt').html(`區間來信數`);
-            $('#adv_mails .title_txt').html(`區間來電數`);
+            $('#adv_phones .title_txt').html(`區間來電數`);
+            $('#adv_mails .title_txt').html(`區間來信數`);
             $('#adv_calls .title_txt').html(`區間聯絡比率`);
           }
           else{
@@ -1787,8 +1791,8 @@ function get_an ({destroy=false}) {
             $('#adv_mails .user_num').html(total_user_mail + '封');
             $('#adv_phones .user_num').html(total_user_phone + '通');
             $('#adv_calls .user_num').html(adv_call + '%');
-            $('#adv_phones .title_txt').html(`總來信數`);
-            $('#adv_mails .title_txt').html(`總來電數`);
+            $('#adv_phones .title_txt').html(`總來電數`);
+            $('#adv_mails .title_txt').html(`總來信數`);
             $('#adv_calls .title_txt').html(`總聯絡比率`);
           }
           
@@ -1909,7 +1913,7 @@ function get_an ({destroy=false}) {
           data.data.return_visit.forEach(one => {
               visit_total+=parseInt( one.total);
           });
-          let avg_re_visit=Math.round( (data.data.return_visit[1].total/visit_total)*1000)/10;
+          let avg_re_visit=Math.round( (data.data.return_visit[1]?.total/visit_total)*1000)/10;
           $('.re_visit .user_num').html(`${avg_re_visit}%`);
 
 
@@ -1924,8 +1928,13 @@ function get_an ({destroy=false}) {
           data.data.media.forEach(one => {
               media_total+=parseInt( one.total);
           });
-          let phone_num=data.data.media[1]!=undefined ? parseInt(data.data.media[1].total):0;
-          let table_num=data.data.media[2]!=undefined ? parseInt(data.data.media[2].total):0;
+          
+          let phone_obj=data.data.media.find((item)=> item.media_type=="mobile");
+          let table_obj=data.data.media.find((item)=> item.media_type=="tablet");
+          // let phone_num=data.data.media[1]!=undefined ? parseInt(data.data.media[1].total):0;
+          // let table_num=data.data.media[2]!=undefined ? parseInt(data.data.media[2].total):0;
+          let phone_num=phone_obj?.total!=undefined ? parseInt(phone_obj.total):0;
+          let table_num=table_obj?.total!=undefined ? parseInt(table_obj.total):0;
           let phone_media_total=phone_num+table_num;
           let avg_media=Math.round( (phone_media_total/media_total)*1000)/10;
           $('.media_item .user_num').html(`${avg_media}%`);
