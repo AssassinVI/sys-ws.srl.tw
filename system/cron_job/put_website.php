@@ -34,6 +34,8 @@ if(!empty($job['case_id'])){
     //-- 建案檔案 --
     copy_dir(WS_PATH.'product_html/'.$job['case_id'], $web_url);
     unlink($web_url.'/Default.php');
+    unlink($web_url.'/privacy.php');
+    unlink($web_url.'/thanks.php');
     unlink($web_url.'/error_log');
 
     //-- 抓index.html --
@@ -55,15 +57,53 @@ if(!empty($job['case_id'])){
     $temp=preg_replace('/\.\.\/product_html\/'.$job['case_id'].'\/img\//', 'img/', $temp);
     $temp=preg_replace('/https\:\/\/ws\.srl\.img\//', 'img/', $temp);
     $temp=preg_replace('/googleMapTool/', 'https://ws.srl.tw/googleMapTool', $temp);
+    $temp=preg_replace('/privacy.php/', 'privacy.html', $temp);
+    $temp=preg_replace('/thanks.php/', 'thanks.html', $temp);
 
     $web_url_index=$web_url.'/index.html';
     $fp=fopen($web_url_index, "w");
     fwrite($fp, $temp);
     fclose($fp);
+
+
+    //-- 判斷有無privacy.php檔案 --
+    if(file_exists(WS_PATH.'product_html/'.$job['case_id'].'/privacy.php')){
+        // 設定擷取的URL網址
+        curl_setopt($ch, CURLOPT_URL, "https://ws.srl.tw/test/".$case_num."/privacy.php");
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
     
-   
-    // 關閉CURL連線
-    curl_close($ch);
+        //將curl_exec()獲取的訊息以文件流的形式返回，而不是直接輸出。
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+    
+        //-- 執行 --
+        $temp=curl_exec($ch);
+        
+        $web_url_index=$web_url.'/privacy.html';
+        $fp=fopen($web_url_index, "w");
+        fwrite($fp, $temp);
+        fclose($fp);
+    }
+
+    //-- 判斷有無thanks.php檔案 --
+    if(file_exists(WS_PATH.'product_html/'.$job['case_id'].'/thanks.php')){
+        // 設定擷取的URL網址
+        curl_setopt($ch, CURLOPT_URL, "https://ws.srl.tw/test/".$case_num."/thanks.php");
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
+    
+        //將curl_exec()獲取的訊息以文件流的形式返回，而不是直接輸出。
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+    
+        //-- 執行 --
+        $temp=curl_exec($ch);
+
+        $web_url_index=$web_url.'/thanks.html';
+        $fp=fopen($web_url_index, "w");
+        fwrite($fp, $temp);
+        fclose($fp);
+    }
+
+    
+
 
 
 

@@ -58,7 +58,10 @@ if($_POST){
       //  'line_Client_ID'=>$_POST['line_Client_ID'],
        'is_custom'=>$is_custom,
        'cus_html'=>$_POST['cus_html'],
-       'thanks_url'=>$_POST['thanks_url'],
+       'privacy_case_name'=>$_POST['privacy_case_name'],
+       'thanks_head_code'=>$_POST['thanks_head_code'],
+       'thanks_body_code'=>$_POST['thanks_body_code'],
+       'thanks_back_url'=>$_POST['thanks_back_url'],
        'OnLineOrNot'=>$OnLineOrNot
     ];
 
@@ -87,7 +90,10 @@ if($_POST){
       //  'line_Client_ID'=>$_POST['line_Client_ID'],
        'is_custom'=>$is_custom,
        'cus_html'=>$_POST['cus_html'],
-       'thanks_url'=>$_POST['thanks_url'],
+       'privacy_case_name'=>$_POST['privacy_case_name'],
+       'thanks_head_code'=>$_POST['thanks_head_code'],
+       'thanks_body_code'=>$_POST['thanks_body_code'],
+       'thanks_back_url'=>$_POST['thanks_back_url'],
        'OnLineOrNot'=>$OnLineOrNot
     ];
 
@@ -242,10 +248,28 @@ if($_POST){
                               <div class="form-group">
                                 <textarea id="cus_html" name="cus_html" class="form-control"  rows="30"><?php echo $row['cus_html'];?></textarea>
                               </div>
-                              <div class="form-group">
-                                  <label class="col-sm-2 control-label">感謝頁連結</label>
+                                 <div class="form-group">
+                                  <label class="col-sm-2 control-label">隱私權申明公司名稱</label>
                                   <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="thanks_url" name="thanks_url" value="<?php echo $row['thanks_url'];?>">
+                                    <input type="text" class="form-control" id="privacy_case_name" name="privacy_case_name" value="<?php echo $row['privacy_case_name'];?>">
+                                 </div>
+                                </div>
+                                <div class="form-group">
+                                  <label class="col-sm-2 control-label">感謝頁head代碼</label>
+                                  <div class="col-sm-10">
+                                    <textarea name="thanks_head_code" id="thanks_head_code" class="form-control" rows="5"><?php echo $row['thanks_head_code'];?></textarea>
+                                  </div>
+                                </div>
+                                <div class="form-group">
+                                  <label class="col-sm-2 control-label">感謝頁body代碼</label>
+                                  <div class="col-sm-10">
+                                    <textarea name="thanks_body_code" id="thanks_body_code" class="form-control" rows="5"><?php echo $row['thanks_body_code'];?></textarea>
+                                  </div>
+                                </div>
+                                <div class="form-group">
+                                  <label class="col-sm-2 control-label">感謝頁返回連結</label>
+                                  <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="thanks_back_url" name="thanks_back_url" value="<?php echo $row['thanks_back_url'];?>">
                                   </div>
                                 </div>
                           </div>
