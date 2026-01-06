@@ -63,6 +63,123 @@
     #sort_btn {
         display: none;
     }
+
+    /* 資產管理樣式 */
+    .asset-item {
+        padding: 15px;
+        margin: 8px 0;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background: #fff;
+        transition: all 0.3s ease;
+    }
+    
+    .asset-item:hover {
+        border-color: #3498db;
+        box-shadow: 0 2px 8px rgba(52, 152, 219, 0.2);
+    }
+    
+    .asset-category {
+        margin: 20px 0;
+        padding: 15px;
+        border-left: 4px solid #3498db;
+        background: #f8f9fa;
+    }
+    
+    .asset-category h5 {
+        margin-top: 0;
+        margin-bottom: 12px;
+        color: #2c3e50;
+    }
+    
+    .asset-badge {
+        display: inline-block;
+        padding: 3px 8px;
+        margin-left: 5px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: bold;
+    }
+    
+    .asset-badge.js {
+        background-color: #f1c40f;
+        color: #fff;
+    }
+    
+    .asset-badge.css {
+        background-color: #3498db;
+        color: #fff;
+    }
+    
+    .asset-description {
+        color: #7f8c8d;
+        font-size: 12px;
+        margin: 5px 0;
+    }
+    
+    .asset-path {
+        color: #27ae60;
+        font-size: 11px;
+        word-break: break-all;
+        font-family: monospace;
+    }
+    
+    .custom-asset-item {
+        padding: 15px;
+        margin: 8px 0;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        background: #fff;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .custom-asset-info h5 {
+        margin: 0 0 5px 0;
+    }
+    
+    .custom-asset-info p {
+        margin: 0;
+        font-size: 12px;
+        color: #7f8c8d;
+    }
+    
+    .asset-buttons {
+        margin-top: 10px;
+    }
+    
+    .asset-buttons .btn {
+        margin-right: 5px;
+    }
+    
+    .no-assets {
+        text-align: center;
+        padding: 30px;
+        color: #95a5a6;
+    }
+    
+    .asset-checkbox {
+        margin-right: 8px;
+    }
+    
+    .filter-section {
+        margin-bottom: 15px;
+        padding: 12px;
+        background: #ecf0f1;
+        border-radius: 4px;
+    }
+    
+    .tabs-container {
+        margin-top: 15px;
+    }
+    
+    .tab-content {
+        padding: 15px;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-top: none;
+    }
 </style>
 <?php include("../../core/page/header02.php");//載入頁面heaer02?>
 <?php 
@@ -128,6 +245,10 @@ if ($_GET) {
                         <a href="iframe_js.php?Tb_index=<?php echo $_GET['Tb_index']?>"
                             class="iframe_box btn btn-success">自訂JS</a>
                         
+                        <a href="#" id="btn-manage-assets" class="btn btn-warning">
+                            <i class="fa fa-cubes"></i> 套件庫
+                        </a>
+                        
                         <!-- 功能區塊排序 -->
                         <input type="hidden" id="fun_sort">
 
@@ -186,6 +307,132 @@ if ($_GET) {
 </div><!-- /#page-content -->
 
 <input type="hidden" name="case_id" value="<?php echo $_GET['Tb_index'];?>">
+
+<!-- 資產管理 Modal -->
+<div class="modal fade" id="modal-assets-manager" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fa fa-cubes"></i> 套件庫管理
+                </h5>
+            </div>
+            <div class="modal-body">
+                <div class="tabs-container">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#tab-library-assets">
+                            <i class="fa fa-cube"></i> 套件庫
+                            <span class="badge" id="library-assets-count">0</span>
+                        </a></li>
+                        <li><a data-toggle="tab" href="#tab-custom-assets">
+                            <i class="fa fa-code"></i> 自訂資源
+                            <span class="badge" id="custom-assets-count">0</span>
+                        </a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <!-- 套件庫 -->
+                        <div id="tab-library-assets" class="tab-pane active">
+                            <div class="filter-section">
+                                <label>篩選:</label>
+                                <select id="filter-category-assets" class="form-control" style="width: auto; display: inline-block;">
+                                    <option value="">-- 所有分類 --</option>
+                                </select>
+                            </div>
+                            <div id="assets-library-list"></div>
+                        </div>
+                        
+                        <!-- 自訂資源 -->
+                        <div id="tab-custom-assets" class="tab-pane">
+                            <button class="btn btn-success" id="btn-add-custom-asset" style="margin-bottom: 15px;">
+                                <i class="fa fa-plus"></i> 新增自訂資源
+                            </button>
+                            <div id="custom-assets-list"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btn-save-assets-config">
+                    <i class="fa fa-save"></i> 儲存設定
+                </button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 自訂資源編輯 Modal -->
+<div class="modal fade" id="modal-edit-custom-asset" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-custom-title">新增自訂資源</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="form-custom-asset-edit">
+                <div class="modal-body">
+                    <input type="hidden" id="custom-Tb_index">
+                    
+                    <div class="form-group">
+                        <label>資源名稱 *</label>
+                        <input type="text" class="form-control" id="custom-asset_name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>資源類型 *</label>
+                        <select class="form-control" id="custom-asset_type" required>
+                            <option value="js">JavaScript</option>
+                            <option value="css">CSS</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>載入位置 *</label>
+                        <select class="form-control" id="custom-load_position" required>
+                            <option value="head">Head (頁面頭部)</option>
+                            <option value="body_top">Body Top (頁面開始)</option>
+                            <option value="body_bottom" selected>Body Bottom (頁面結尾)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>載入順序</label>
+                        <input type="number" class="form-control" id="custom-load_order" value="200" min="1">
+                        <small class="form-text text-muted">數字越小越優先載入</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>程式碼內容 *</label>
+                        <textarea class="form-control" id="custom-content" rows="10" required style="font-family: monospace;"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+                    <button type="button" class="btn btn-primary" id="btn-save-custom-asset">儲存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- 預覽 Modal -->
+<div class="modal fade" id="modal-preview-asset" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">預覽</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <pre id="preview-content-asset" style="background: #f4f4f4; padding: 15px; border-radius: 4px; max-height: 400px; overflow: auto;"></pre>
+            </div>
+        </div>
+    </div>
+</div>
 
 <?php  include("../../core/page/footer01.php");//載入頁面footer01.php?>
 <script type="text/javascript">
@@ -466,5 +713,339 @@ function move_iframe(id) {
     }, 1000);
 
 }
+
+// ==================== 資產管理功能 ====================
+const caseId = '<?php echo $_GET['Tb_index']; ?>';
+let allLibraryAssets = [];
+let customAssets = [];
+let selectedAssets = [];
+
+// 打開資產管理 Modal
+$('#btn-manage-assets').click(function(e) {
+    e.preventDefault();
+    $('#modal-assets-manager').modal('show');
+    loadLibraryAssets();
+    loadCustomAssetsData();
+    loadAssetCategories();
+});
+
+// 載入套件庫
+function loadLibraryAssets() {
+    $.ajax({
+        url: '../assets_manager/ajax_handler.php',
+        type: 'POST',
+        data: { action: 'get_library_assets', case_id: caseId },
+        dataType: 'json',
+        success: function(response) {
+            if (response.status === 'success') {
+                allLibraryAssets = response.data;
+                renderLibraryAssets(response.data, response.selected);
+                selectedAssets = response.selected;
+            }
+        }
+    });
+}
+
+// 載入資產分類
+function loadAssetCategories() {
+    $.ajax({
+        url: '../assets_manager/library_ajax.php',
+        type: 'POST',
+        data: { action: 'get_categories' },
+        dataType: 'json',
+        success: function(response) {
+            if (response.status === 'success') {
+                let html = '<option value="">-- 所有分類 --</option>';
+                response.data.forEach(cat => {
+                    html += '<option value="' + cat + '">' + cat + '</option>';
+                });
+                $('#filter-category-assets').html(html);
+            }
+        }
+    });
+}
+
+// 渲染套件庫
+function renderLibraryAssets(data, selected = []) {
+    let html = '';
+    const categories = {};
+    
+    data.forEach(item => {
+        const cat = item.asset_category || '其他';
+        if (!categories[cat]) categories[cat] = [];
+        categories[cat].push(item);
+    });
+    
+    if (Object.keys(categories).length === 0) {
+        html = '<div class="no-assets"><p>沒有可用的套件</p></div>';
+        $('#assets-library-list').html(html);
+        return;
+    }
+    
+    for (let cat in categories) {
+        html += '<div class="asset-category"><h5>' + cat + '</h5>';
+        
+        categories[cat].forEach(asset => {
+            const checked = selected.includes(asset.Tb_index) ? 'checked' : '';
+            const icon = asset.asset_type === 'js' ? 'fa-file-code-o' : 'fa-css3';
+            const badgeClass = asset.asset_type === 'js' ? 'js' : 'css';
+            const badgeText = asset.asset_type.toUpperCase();
+            
+            html += `
+                <div class="asset-item" data-asset-id="${asset.Tb_index}">
+                    <label style="margin: 0; cursor: pointer;">
+                        <input type="checkbox" class="asset-checkbox" 
+                               value="${asset.Tb_index}" ${checked}>
+                        <i class="fa ${icon}"></i>
+                        <strong>${asset.asset_name}</strong>
+                        <span class="asset-badge ${badgeClass}">${badgeText}</span>
+                    </label>
+                    <div class="asset-description">${asset.description || '(無描述)'}</div>
+                    <div class="asset-path">
+                        <i class="fa fa-link"></i> ${asset.file_path}
+                    </div>
+                    ${asset.version ? '<small class="text-muted">版本: ' + asset.version + '</small>' : ''}
+                </div>
+            `;
+        });
+        
+        html += '</div>';
+    }
+    
+    $('#assets-library-list').html(html);
+    
+    const checkedCount = $('.asset-checkbox:checked').length;
+    $('#library-assets-count').text(checkedCount);
+}
+
+// 資產分類篩選
+$('#filter-category-assets').change(function() {
+    const category = $(this).val();
+    
+    if (category === '') {
+        renderLibraryAssets(allLibraryAssets, selectedAssets);
+    } else {
+        const filtered = allLibraryAssets.filter(item => 
+            item.asset_category === category
+        );
+        renderLibraryAssets(filtered, selectedAssets);
+    }
+});
+
+// 載入自訂資源
+function loadCustomAssetsData() {
+    $.ajax({
+        url: '../assets_manager/ajax_handler.php',
+        type: 'POST',
+        data: { action: 'get_custom_assets', case_id: caseId },
+        dataType: 'json',
+        success: function(response) {
+            if (response.status === 'success') {
+                customAssets = response.data;
+                renderCustomAssetsData(response.data);
+            }
+        }
+    });
+}
+
+// 渲染自訂資源
+function renderCustomAssetsData(data) {
+    let html = '';
+    
+    if (data.length === 0) {
+        html = '<div class="no-assets"><p>還沒有自訂資源</p></div>';
+    } else {
+        data.forEach(asset => {
+            const statusClass = asset.is_enabled==1 ? 'success' : 'warning';
+            const statusText = asset.is_enabled==1 ? '已啟用' : '已停用';
+            const icon = asset.asset_type === 'js' ? 'fa-file-code-o' : 'fa-css3';
+            
+            html += `
+                <div class="custom-asset-item">
+                    <div class="custom-asset-info">
+                        <h5>
+                            <i class="fa ${icon}"></i>
+                            ${asset.asset_name}
+                            <span class="label label-${statusClass}">${statusText}</span>
+                        </h5>
+                        <p>
+                            <strong>類型:</strong> ${asset.asset_type.toUpperCase()} | 
+                            <strong>位置:</strong> ${asset.load_position} |
+                            <strong>順序:</strong> ${asset.load_order}
+                        </p>
+                    </div>
+                    <div class="asset-buttons">
+                        <button class="btn btn-xs btn-info btn-preview-asset" data-id="${asset.Tb_index}">
+                            <i class="fa fa-eye"></i> 預覽
+                        </button>
+                        <button class="btn btn-xs btn-primary btn-edit-asset" data-id="${asset.Tb_index}">
+                            <i class="fa fa-edit"></i> 編輯
+                        </button>
+                        <button class="btn btn-xs btn-warning btn-toggle-asset" data-id="${asset.Tb_index}">
+                            <i class="fa fa-toggle-on"></i> ${asset.is_enabled ? '停用' : '啟用'}
+                        </button>
+                        <button class="btn btn-xs btn-danger btn-delete-asset" data-id="${asset.Tb_index}">
+                            <i class="fa fa-trash"></i> 刪除
+                        </button>
+                    </div>
+                </div>
+            `;
+        });
+    }
+    
+    $('#custom-assets-list').html(html);
+    
+    // 綁定事件
+    $('.btn-edit-asset').click(editCustomAssetModal);
+    $('.btn-delete-asset').click(deleteCustomAssetModal);
+    $('.btn-toggle-asset').click(toggleCustomAssetModal);
+    $('.btn-preview-asset').click(previewCustomAssetModal);
+    
+    $('#custom-assets-count').text(data.length);
+}
+
+// 新增自訂資源
+$('#btn-add-custom-asset').click(function() {
+    $('#custom-Tb_index').val('');
+    $('#form-custom-asset-edit')[0].reset();
+    $('#custom-load_order').val(200);
+    $('#modal-custom-title').text('新增自訂資源');
+    $('#modal-edit-custom-asset').modal('show');
+});
+
+// 編輯自訂資源
+function editCustomAssetModal() {
+    const id = $(this).data('id');
+    const asset = customAssets.find(a => a.Tb_index == id);
+    
+    if (asset) {
+        $('#custom-Tb_index').val(asset.Tb_index);
+        $('#custom-asset_name').val(asset.asset_name);
+        $('#custom-asset_type').val(asset.asset_type);
+        $('#custom-load_position').val(asset.load_position);
+        $('#custom-load_order').val(asset.load_order);
+        $('#custom-content').val(asset.content);
+        $('#modal-custom-title').text('編輯自訂資源');
+        $('#modal-edit-custom-asset').modal('show');
+    }
+}
+
+// 預覽自訂資源
+function previewCustomAssetModal() {
+    const id = $(this).data('id');
+    const asset = customAssets.find(a => a.Tb_index == id);
+    
+    if (asset) {
+        $('#preview-content-asset').text(asset.content);
+        $('#modal-preview-asset').modal('show');
+    }
+}
+
+// 保存自訂資源
+$('#btn-save-custom-asset').click(function() {
+    const Tb_index = $('#custom-Tb_index').val();
+    const data = {
+        action: 'save_custom_asset',
+        case_id: caseId,
+        asset_name: $('#custom-asset_name').val(),
+        asset_type: $('#custom-asset_type').val(),
+        content: $('#custom-content').val(),
+        load_position: $('#custom-load_position').val(),
+        load_order: $('#custom-load_order').val()
+    };
+    
+    if (Tb_index) {
+        data.Tb_index = Tb_index;
+    }
+    
+    $.ajax({
+        url: '../assets_manager/ajax_handler.php',
+        type: 'POST',
+        data: data,
+        dataType: 'json',
+        success: function(response) {
+            if (response.status === 'success') {
+                alert('已保存');
+                $('#modal-edit-custom-asset').modal('hide');
+                loadCustomAssetsData();
+            }
+        },
+        error: function(xhr) {
+            alert('保存失敗');
+        }
+    });
+});
+
+// 刪除自訂資源
+function deleteCustomAssetModal() {
+    const id = $(this).data('id');
+    
+    if (confirm('確定要刪除此資源嗎？')) {
+        $.ajax({
+            url: '../assets_manager/ajax_handler.php',
+            type: 'POST',
+            data: {
+                action: 'delete_custom_asset',
+                case_id: caseId,
+                Tb_index: id
+            },
+            dataType: 'json',
+            success: function(response) {
+                alert('已刪除');
+                loadCustomAssetsData();
+            }
+        });
+    }
+}
+
+// 切換自訂資源狀態
+function toggleCustomAssetModal() {
+    const id = $(this).data('id');
+    
+    $.ajax({
+        url: '../assets_manager/ajax_handler.php',
+        type: 'POST',
+        data: {
+            action: 'toggle_custom_asset',
+            case_id: caseId,
+            Tb_index: id
+        },
+        dataType: 'json',
+        success: function(response) {
+            loadCustomAssetsData();
+        }
+    });
+}
+
+// 儲存套件設定
+$('#btn-save-assets-config').click(function() {
+    const selected = [];
+    $('.asset-checkbox:checked').each(function() {
+        selected.push($(this).val());
+    });
+    
+    $.ajax({
+        url: '../assets_manager/ajax_handler.php',
+        type: 'POST',
+        data: { 
+            action: 'save_case_assets',
+            case_id: caseId,
+            assets: selected
+        },
+        dataType: 'json',
+        success: function(response) {
+            alert('已儲存');
+        },
+        error: function(xhr) {
+            alert('保存失敗');
+        }
+    });
+});
+
+// 監聽複選框變化
+$(document).on('change', '.asset-checkbox', function() {
+    $('#library-assets-count').text($('.asset-checkbox:checked').length);
+});
+
 </script>
 <?php  include("../../core/page/footer02.php");//載入頁面footer02.php?>
