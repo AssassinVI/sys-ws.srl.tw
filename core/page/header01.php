@@ -154,6 +154,8 @@ if ($_SESSION['admin_per']!='admin') {
             background: linear-gradient(45deg, rgb(110 148 212) 0%,rgb(25 176 146) 100%);
          }
 
+         
+
         @media (max-width: 550px){
            .ibox-content{padding:10px;}
            .none_420{ display: none !important; }
@@ -163,6 +165,16 @@ if ($_SESSION['admin_per']!='admin') {
            tbody tr td{display: block; padding-top: 1px;  padding-bottom: 1px;}
            tbody tr td::before{ content: attr(data-th) " : "; font-weight: bold; width: 5em; display: inline-block; color: #0e4e7b; font-size:14px;} */
         }
+
+        .modal-header .close{
+            position: absolute;
+            top: 0;
+            right: 0;
+            background-color: #c40101;
+            opacity: 1;
+            color: #fff;
+            padding: 7px;
+         }
      </style>
      
      

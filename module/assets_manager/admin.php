@@ -146,15 +146,6 @@
         width: 100%;
     }
 
-    .modal-header .close{
-        position: absolute;
-        top: 0;
-        right: 0;
-        background-color: #c40101;
-        opacity: 1;
-        color: #fff;
-        padding: 7px;
-    }
 </style>
 <?php include("../../core/page/header02.php"); ?>
 

@@ -248,6 +248,9 @@ if ($_GET) {
                         <a href="#" id="btn-manage-assets" class="btn btn-warning">
                             <i class="fa fa-cubes"></i> 套件庫
                         </a>
+                        <a href="#" id="btn-file-manager" class="btn btn-info">
+                            <i class="fa fa-image"></i> 圖檔管理器
+                        </a>
                         
                         <!-- 功能區塊排序 -->
                         <input type="hidden" id="fun_sort">
@@ -429,6 +432,23 @@ if ($_GET) {
             </div>
             <div class="modal-body">
                 <pre id="preview-content-asset" style="background: #f4f4f4; padding: 15px; border-radius: 4px; max-height: 400px; overflow: auto;"></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 圖檔管理器 Modal -->
+<div class="modal fade" id="modal-file-manager" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-lg" role="document" style="width: 90%; max-width: 1200px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fa fa-image"></i> 圖檔管理器</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="padding:0; height: 80vh;">
+                <iframe id="iframe-file-manager" src="" style="border:0; width:100%; height:100%;"></iframe>
             </div>
         </div>
     </div>
@@ -727,6 +747,14 @@ $('#btn-manage-assets').click(function(e) {
     loadLibraryAssets();
     loadCustomAssetsData();
     loadAssetCategories();
+});
+
+// 打開圖檔管理器 Modal
+$('#btn-file-manager').click(function(e) {
+    e.preventDefault();
+    const caseId = '<?php echo $_GET['Tb_index']; ?>';
+    $('#iframe-file-manager').attr('src', '../assets_manager/index.php?case_id=' + encodeURIComponent(caseId));
+    $('#modal-file-manager').modal('show');
 });
 
 // 載入套件庫

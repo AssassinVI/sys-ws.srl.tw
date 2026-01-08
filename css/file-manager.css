@@ -1,0 +1,263 @@
+:root {
+  --fm-bg: #f8f9fb;
+  --fm-card: #ffffff;
+  --fm-border: #e2e5ec;
+  --fm-accent: #2b7de9;
+  --fm-text: #1f2633;
+  --fm-muted: #6b7280;
+  --fm-danger: #c53030;
+}
+
+.fm-app {
+  background: var(--fm-bg);
+  border: 1px solid var(--fm-border);
+  border-radius: 8px;
+  padding: 16px;
+  font-family: "Segoe UI", Arial, sans-serif;
+  color: var(--fm-text);
+}
+
+.fm-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.fm-btn {
+  background: var(--fm-accent);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.fm-btn.secondary {
+  background: #edf2f7;
+  color: var(--fm-text);
+}
+
+.fm-btn.danger {
+  background: var(--fm-danger);
+  color: #fff;
+}
+
+.fm-path {
+  font-size: 13px;
+  color: var(--fm-muted);
+}
+
+.fm-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.fm-card {
+  background: var(--fm-card);
+  border: 1px solid var(--fm-border);
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.fm-thumb {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+  background: #f1f5f9;
+  border: 1px solid var(--fm-border);
+  border-radius: 6px;
+}
+
+.fm-thumb-link {
+  display: block;
+  overflow: hidden;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.fm-thumb-link:hover {
+  opacity: 0.85;
+  transform: scale(1.02);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.fm-meta {
+  font-size: 12px;
+  color: var(--fm-muted);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.fm-actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.fm-empty {
+  text-align: center;
+  color: var(--fm-muted);
+  padding: 24px 0;
+}
+
+.fm-error {
+  color: var(--fm-danger);
+  font-size: 13px;
+}
+
+.fm-toast-container {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 2000;
+}
+
+.fm-toast {
+  width: 260px;
+  background: var(--fm-card);
+  border: 1px solid var(--fm-border);
+  border-radius: 10px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+  padding: 12px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  animation: fm-toast-in 0.18s ease-out;
+}
+
+@keyframes fm-toast-in {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fm-toast-thumb {
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
+  background: #f1f5f9;
+  border: 1px solid var(--fm-border);
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.fm-toast-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.fm-toast-name {
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--fm-text);
+  word-break: break-all;
+}
+
+.fm-progress {
+  width: 100%;
+  height: 6px;
+  background: #e2e5ec;
+  border-radius: 3px;
+  overflow: hidden;
+  margin: 4px 0;
+}
+
+.fm-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--fm-accent), #4a9ffe);
+  width: 0%;
+  transition: width 0.2s ease;
+}
+
+.fm-toast-status {
+  font-size: 12px;
+  color: var(--fm-muted);
+}
+
+.fm-upload-area {
+  border: 2px dashed var(--fm-border);
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  background: #f9fafb;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.fm-upload-area:hover {
+  border-color: var(--fm-accent);
+  background: #f0f4f8;
+}
+
+.fm-upload-area.drag {
+  border-color: var(--fm-accent);
+  background: #e8f0fe;
+}
+
+.fm-upload-item {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 12px;
+  background: var(--fm-card);
+  border: 1px solid var(--fm-border);
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+.fm-upload-thumb {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  background: #f1f5f9;
+  border: 1px solid var(--fm-border);
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.fm-upload-info {
+  flex: 1;
+  text-align: left;
+}
+
+.fm-upload-name {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 6px;
+  word-break: break-all;
+}
+
+.fm-progress {
+  width: 100%;
+  height: 6px;
+  background: #e2e5ec;
+  border-radius: 3px;
+  overflow: hidden;
+  margin: 4px 0;
+}
+
+.fm-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--fm-accent), #4a9ffe);
+  width: 0%;
+  transition: width 0.2s ease;
+}
+
+.fm-upload-status {
+  font-size: 12px;
+  color: var(--fm-muted);
+}
